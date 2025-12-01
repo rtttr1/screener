@@ -1,11 +1,12 @@
 {
   "name": "fe-externship",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
+  "description": "FE Internship project for NaverPay.",
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "tsc -b && vite build",
+    "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@naverpay/eslint-config": "^2.4.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
