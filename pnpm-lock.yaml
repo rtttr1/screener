@@ -21,6 +21,9 @@ importers:
       '@naverpay/eslint-config':
         specifier: ^2.4.0
         version: 2.4.0(@types/estree@1.0.8)(@typescript-eslint/eslint-plugin@8.48.0(@typescript-eslint/parser@8.48.0(eslint@9.39.1)(typescript@5.9.3))(eslint@9.39.1)(typescript@5.9.3))(@typescript-eslint/parser@8.48.0(eslint@9.39.1)(typescript@5.9.3))(eslint@9.39.1)(jsonc-eslint-parser@2.4.1)(typescript@5.9.3)
+      '@naverpay/prettier-config':
+        specifier: ^1.0.1
+        version: 1.0.1(prettier@3.7.3)
       '@types/node':
         specifier: ^24.10.1
         version: 24.10.1
@@ -372,6 +375,11 @@ packages:
     resolution: {integrity: sha512-7mKoaQRbhPe2QFCjKvo4+LBpxzIr6xR6/oeqArRGrT4Xfa1jNRyKTEBTyIDmVL3B1rNtzg0WdPjmUmhjgzFH9w==}
     peerDependencies:
       eslint: '>=8.57.0'
+
+  '@naverpay/prettier-config@1.0.1':
+    resolution: {integrity: sha512-Wr0e6a91ufu+ijG+xIiCi5ZSKysZ9NqxoaBR1QR3cGe0sbB+oQXcHN3HdZF7bzU7mmlvNTD3/faWTQm4jNftKA==}
+    peerDependencies:
+      prettier: ^2.8.8 || ^3.0.0
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1814,6 +1822,11 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
+  prettier@3.7.3:
+    resolution: {integrity: sha512-QgODejq9K3OzoBbuyobZlUhznP5SKwPqp+6Q6xw6o8gnhr4O85L2U915iM2IDcfF2NPXVaM9zlo9tdwipnYwzg==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
 
@@ -2567,6 +2580,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
+
+  '@naverpay/prettier-config@1.0.1(prettier@3.7.3)':
+    dependencies:
+      prettier: 3.7.3
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -4183,6 +4200,8 @@ snapshots:
       source-map-js: 1.2.1
 
   prelude-ls@1.2.1: {}
+
+  prettier@3.7.3: {}
 
   prop-types@15.8.1:
     dependencies:
