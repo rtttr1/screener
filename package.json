@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc -b && vite build",
     "dev": "vite",
-    "lint": "eslint .",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,yaml,yml}'",
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,yaml,yml}' --fix",
     "preview": "vite preview"
   },
   "dependencies": {
