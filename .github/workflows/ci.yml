@@ -66,9 +66,9 @@ jobs:
                   echo "|------------|--------|" >> summary.md
 
                   if [ "${{ steps.build.outcome }}" == "success" ]; then
-                    echo "| 🔷 **Build/Type Check** | ✅ Pass |" >> summary.md
+                    echo "| 🔷 **Build/Type** | ✅ Pass |" >> summary.md
                   else
-                    echo "| 🔷 **Build/Type Check** | ❌ Fail |" >> summary.md
+                    echo "| 🔷 **Build/Type** | ❌ Fail |" >> summary.md
                   fi
 
                   if [ "${{ steps.lint.outcome }}" == "success" ]; then
