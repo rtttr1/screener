@@ -16,6 +16,7 @@
         "svgr": "svgr public/svg -d src/shared/assets/svg --no-prettier --ignore-existing --typescript --no-dimensions --no-index --jsx-runtime automatic"
     },
     "dependencies": {
+        "@radix-ui/react-slot": "^1.2.4",
         "@tailwindcss/vite": "^4.1.17",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
