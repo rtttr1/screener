@@ -1,4 +1,4 @@
-import SvgBadgeNpay from '../assets/svg/BadgeNpay'
+import SvgBadgeNpay from '@/shared/assets/svg/BadgeNpay'
 
 const Header = () => {
     return (
