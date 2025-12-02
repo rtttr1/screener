@@ -12,6 +12,7 @@
         "prettier": "prettier --check '**/*.{ts,tsx,js,mjs,cjs,jsx,json}'",
         "prettier:fix": "prettier --write '**/*.{ts,tsx,js,mjs,cjs,jsx,json}'",
         "preview": "vite preview",
+        "start": "npm run preview",
         "svgr": "svgr public/svg -d src/shared/assets/svg --no-prettier --ignore-existing --typescript --no-dimensions --no-index --jsx-runtime automatic"
     },
     "dependencies": {
