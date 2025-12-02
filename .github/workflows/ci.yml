@@ -1,0 +1,112 @@
+name: CI Build
+
+on:
+    push:
+        branches:
+            - 'feat/**'
+            - 'fix/**'
+            - 'design/**'
+            - 'refactor/**'
+            - 'ci/**'
+            - 'setting/**'
+            - 'docs/**'
+            - 'chore/**'
+            - 'test/**'
+    pull_request:
+        branches:
+            - main
+
+permissions:
+    contents: read
+    pull-requests: write
+    checks: write
+
+jobs:
+    ci-pipeline:
+        name: Code Quality Pipeline
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '24.11.1'
+                  cache: 'pnpm'
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 8
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: 🔷 Build / Type Check
+              id: build
+              run: pnpm run build
+              continue-on-error: true
+              env:
+                  FORCE_COLOR: 3
+
+            - name: 🔍 ESLint Check
+              id: lint
+              run: |
+                  set -o pipefail
+                  pnpm run lint | tee lint-result
+              continue-on-error: true
+              env:
+                  FORCE_COLOR: 3
+
+            - name: 🎨 Format Check
+              id: format
+              run: |
+                  set -o pipefail
+                  pnpm run prettier | tee format-result
+              continue-on-error: true
+              env:
+                  FORCE_COLOR: 3
+
+            - name: Generate Results Summary
+              if: always()
+              run: |
+                  echo "## 🚀 CI Check Results" > summary.md
+                  echo "" >> summary.md
+                  echo "| Check Item | Status |" >> summary.md
+                  echo "|------------|--------|" >> summary.md
+
+                  if [ "${{ steps.build.outcome }}" == "success" ]; then
+                    echo "| 🔷 **Build/Type Check** | ✅ Pass |" >> summary.md
+                  else
+                    echo "| 🔷 **Build/Type Check** | ❌ Fail |" >> summary.md
+                  fi
+
+                  if [ "${{ steps.lint.outcome }}" == "success" ]; then
+                    echo "| 🔍 **ESLint** | ✅ Pass |" >> summary.md
+                  else
+                    echo "| 🔍 **ESLint** | ❌ Fail |" >> summary.md
+                  fi
+
+                  if [ "${{ steps.format.outcome }}" == "success" ]; then
+                    echo "| 🎨 **Format** | ✅ Pass |" >> summary.md
+                  else
+                    echo "| 🎨 **Format** | ❌ Fail |" >> summary.md
+                  fi
+
+                  echo "" >> summary.md
+                  echo "📋 [View Full Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> summary.md
+
+            - name: Comment on PR
+              if: github.event_name == 'pull_request'
+              uses: peter-evans/create-or-update-comment@v4
+              with:
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body-path: summary.md
+
+            - name: Final Failure Check
+              if: steps.build.outcome == 'failure' || steps.lint.outcome == 'failure' || steps.format.outcome == 'failure'
+              run: |
+                  echo "One or more required checks failed."
+                  exit 1
