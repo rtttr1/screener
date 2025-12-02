@@ -23,18 +23,14 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: '24.11.1'
-
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
+                  cache: 'npm'
 
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: npm ci
 
             - name: 🔷 Build / Type Check
               id: build
-              run: pnpm run build
+              run: npm run build
               continue-on-error: true
               env:
                   FORCE_COLOR: 3
@@ -43,7 +39,7 @@ jobs:
               id: lint
               run: |
                   set -o pipefail
-                  pnpm run lint | tee lint-result
+                  npm run lint | tee lint-result
               continue-on-error: true
               env:
                   FORCE_COLOR: 3
@@ -52,7 +48,7 @@ jobs:
               id: format
               run: |
                   set -o pipefail
-                  pnpm run prettier | tee format-result
+                  npm run prettier | tee format-result
               continue-on-error: true
               env:
                   FORCE_COLOR: 3
