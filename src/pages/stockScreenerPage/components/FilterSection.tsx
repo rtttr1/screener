@@ -10,7 +10,7 @@ const FilterSection = () => {
     const [hasActiveFilters] = useAtom(hasActiveFiltersAtom)
 
     return (
-        <section aria-label="필터 섹션" className="flex items-center justify-end gap-2 p-4">
+        <section aria-label="스크리너 필터" className="flex items-center justify-end gap-2 p-4">
             <PriceChangeFilter />
             <PriceChangeRateFilter />
             <ExchangeFilter />
