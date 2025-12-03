@@ -19,3 +19,12 @@ export const resetAllFiltersAtom = atom(null, (_get, set) => {
     set(priceChangeRateFilterAtom, null)
     set(exchangeFilterAtom, null)
 })
+
+// 필터가 적용되어 있는지 확인
+export const hasActiveFiltersAtom = atom((get) => {
+    const priceChange = get(priceChangeFilterAtom)
+    const priceChangeRate = get(priceChangeRateFilterAtom)
+    const exchange = get(exchangeFilterAtom)
+
+    return priceChange.length > 0 || priceChangeRate !== null || exchange !== null
+})
