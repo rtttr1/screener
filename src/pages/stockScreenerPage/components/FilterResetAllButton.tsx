@@ -1,18 +1,13 @@
+import {useSetAtom} from 'jotai'
 import {X} from 'lucide-react'
 
 import {Button} from '@/common/components/button'
+import {resetAllFiltersAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
 
-interface FilterResetButtonProps {
-    disabled?: boolean
-}
-
-const FilterResetAllButton = ({disabled}: FilterResetButtonProps) => {
-    const handleResetAllClick = () => {
-        // TODO: 전체 초기화 로직 구현
-    }
-
+const FilterResetAllButton = () => {
+    const handleResetAllFilters = useSetAtom(resetAllFiltersAtom)
     return (
-        <Button variant="ghost" onClick={handleResetAllClick} disabled={disabled} className="text-sm">
+        <Button variant="ghost" onClick={handleResetAllFilters} className="text-sm">
             <X className="size-4" />
             전체 초기화
         </Button>
