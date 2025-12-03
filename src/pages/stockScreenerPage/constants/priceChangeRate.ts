@@ -18,4 +18,3 @@ export const PRICE_CHANGE_RATE_OPTIONS = Object.values(PRICE_CHANGE_RATE).map((v
     value,
     label: PRICE_CHANGE_RATE_LABEL[value],
 }))
-

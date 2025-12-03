@@ -14,4 +14,3 @@ export const EXCHANGE_OPTIONS = Object.values(EXCHANGES).map((value) => ({
     value,
     label: EXCHANGE_LABEL[value],
 }))
-
