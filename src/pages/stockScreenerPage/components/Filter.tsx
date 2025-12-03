@@ -7,7 +7,7 @@ import {Popover, PopoverContent, PopoverTrigger} from '@/common/components/popov
 import {RadioGroup, RadioGroupItem} from '@/common/components/radio-group'
 import {cn} from '@/common/utils/cn'
 
-export interface FilterOption<T extends string> {
+interface FilterOption<T extends string> {
     value: T
     label: string
 }
@@ -53,7 +53,10 @@ const Filter = <T extends string>({title, options, selectedValue, onConfirm, onR
     return (
         <Popover open={open} onOpenChange={handleOpenChange}>
             <PopoverTrigger asChild>
-                <Button variant={hasSelection ? 'default' : 'outline'} className={cn(hasSelection && 'font-semibold')}>
+                <Button
+                    variant={hasSelection ? 'default' : 'outline'}
+                    className={cn('transition-none', hasSelection && 'font-semibold')}
+                >
                     {hasSelection ? <span className="text-xs">({selectedLabel})</span> : title}
                     <ChevronDown className="size-4" />
                 </Button>
@@ -62,7 +65,7 @@ const Filter = <T extends string>({title, options, selectedValue, onConfirm, onR
             <PopoverContent className="w-80 space-y-4" align="start">
                 <div className="flex items-center justify-between">
                     <h3 className="font-semibold">{title}</h3>
-                    {hasSelection && (
+                    {hasSelection && onReset && (
                         <button
                             type="button"
                             onClick={handleReset}

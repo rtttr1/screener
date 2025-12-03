@@ -7,7 +7,7 @@ import {Checkbox} from '@/common/components/checkbox'
 import {Popover, PopoverContent, PopoverTrigger} from '@/common/components/popover'
 import {cn} from '@/common/utils/cn'
 
-export interface FilterOption<T extends string> {
+interface FilterOption<T extends string> {
     value: T
     label: string
 }
@@ -62,7 +62,10 @@ const MultiSelectFilter = <T extends string>({
     return (
         <Popover open={open} onOpenChange={handleOpenChange}>
             <PopoverTrigger asChild>
-                <Button variant={hasSelection ? 'default' : 'outline'} className={cn(hasSelection && 'font-semibold')}>
+                <Button
+                    variant={hasSelection ? 'default' : 'outline'}
+                    className={cn('transition-none', hasSelection && 'font-semibold')}
+                >
                     {title}
                     {hasSelection && (
                         <span className="rounded-full bg-primary-foreground w-4 h-4 text-xs text-black">
@@ -76,7 +79,7 @@ const MultiSelectFilter = <T extends string>({
             <PopoverContent className="w-80 space-y-4" align="start">
                 <div className="flex items-center justify-between">
                     <h3 className="font-semibold">{title}</h3>
-                    {hasSelection && (
+                    {hasSelection && onReset && (
                         <button
                             type="button"
                             onClick={handleReset}
@@ -87,23 +90,22 @@ const MultiSelectFilter = <T extends string>({
                     )}
                 </div>
                 <div className="space-y-1">
-                    {options.map((option) => (
-                        <label
-                            key={option.value}
-                            className={cn(
-                                'flex w-full cursor-pointer items-center gap-3 rounded-md p-2 text-left hover:bg-accent',
-                                tempValues.includes(option.value) && 'bg-accent',
-                            )}
-                        >
-                            <Checkbox
-                                checked={tempValues.includes(option.value)}
-                                onCheckedChange={() => handleToggle(option.value)}
-                            />
-                            <span className={cn('text-sm', tempValues.includes(option.value) && 'font-medium')}>
-                                {option.label}
-                            </span>
-                        </label>
-                    ))}
+                    {options.map((option) => {
+                        const isChecked = tempValues.includes(option.value)
+
+                        return (
+                            <label
+                                key={option.value}
+                                className={cn(
+                                    'flex w-full cursor-pointer items-center gap-3 rounded-md p-2 text-left hover:bg-accent',
+                                    isChecked && 'bg-accent',
+                                )}
+                            >
+                                <Checkbox checked={isChecked} onCheckedChange={() => handleToggle(option.value)} />
+                                <span className={cn('text-sm', isChecked && 'font-medium')}>{option.label}</span>
+                            </label>
+                        )
+                    })}
                 </div>
                 <div className="flex justify-end border-t pt-4">
                     <Button onClick={handleConfirm}>확인</Button>
