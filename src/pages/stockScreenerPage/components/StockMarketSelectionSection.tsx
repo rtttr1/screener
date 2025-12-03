@@ -32,7 +32,7 @@ const StockMarketSelectionSection = () => {
     }
 
     return (
-        <section aria-label="국내/해외 주식시장 선택 탭 리스트" className="flex items-center gap-3">
+        <section aria-label="국내/해외 주식시장 선택" className="flex items-center gap-3">
             <RegionTabList currentRegion={currentRegion} onRegionTabClick={handleRegionTabClick} />
 
             {isOverseas && (
