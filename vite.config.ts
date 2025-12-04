@@ -31,8 +31,8 @@ export default defineConfig({
                 rewrite: (urlPath) => urlPath.replace(/^\/api-stock/, '/stock'),
                 configure: (proxy, _options) => {
                     proxy.on('proxyReq', (proxyReq, _req, _res) => {
-                        proxyReq.setHeader('origin', 'https://api.stock.naver.com')
-                        proxyReq.setHeader('referer', 'https://api.stock.naver.com/')
+                        proxyReq.setHeader('origin', 'https://m.stock.naver.com')
+                        proxyReq.setHeader('referer', 'https://m.stock.naver.com/')
                     })
                 },
             },
