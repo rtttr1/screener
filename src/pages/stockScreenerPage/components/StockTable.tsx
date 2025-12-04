@@ -1,9 +1,11 @@
-import {ArrowUpDown, Star} from 'lucide-react'
+import {Star} from 'lucide-react'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/stock'
+import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/tableSort'
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
+import SortableTableHead from '@/pages/stockScreenerPage/components/SortableTableHead'
 import {
     formatPriceWithCurrency,
     getChangeStatusColor,
@@ -14,14 +16,12 @@ import {
 
 interface StockTableProps {
     stocks: Stock[]
-    onFavoriteToggle: (stock: Stock) => void
+    currentSortField: SortField | null
+    currentSortOrder: SortOrder
+    onSort: (field: SortField) => void
 }
 
-const StockTable = ({stocks, onFavoriteToggle}: StockTableProps) => {
-    const handleFavoriteToggle = (stock: Stock) => {
-        onFavoriteToggle(stock)
-    }
-
+const StockTable = ({stocks, currentSortField, currentSortOrder, onSort}: StockTableProps) => {
     return (
         <div className="mt-4 rounded-lg border">
             <Table>
@@ -31,38 +31,48 @@ const StockTable = ({stocks, onFavoriteToggle}: StockTableProps) => {
                         <TableHead className="w-[48px]" />
                         <TableHead className="w-[100px]">심볼</TableHead>
                         <TableHead className="w-[200px]">종목명</TableHead>
-                        <TableHead className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                                가격
-                                <ArrowUpDown className="size-4 text-gray-400" />
-                            </div>
-                        </TableHead>
+                        <SortableTableHead
+                            field="closePrice"
+                            label="가격"
+                            currentField={currentSortField}
+                            currentOrder={currentSortOrder}
+                            onSort={onSort}
+                            align="right"
+                        />
                         <TableHead className="text-center">등락</TableHead>
-                        <TableHead className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                                등락값
-                                <ArrowUpDown className="size-4 text-gray-400" />
-                            </div>
-                        </TableHead>
-                        <TableHead className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                                등락률
-                                <ArrowUpDown className="size-4 text-gray-400" />
-                            </div>
-                        </TableHead>
+                        <SortableTableHead
+                            field="compareToPreviousClosePrice"
+                            label="등락값"
+                            currentField={currentSortField}
+                            currentOrder={currentSortOrder}
+                            onSort={onSort}
+                            align="right"
+                        />
+                        <SortableTableHead
+                            field="fluctuationsRatio"
+                            label="등락률"
+                            currentField={currentSortField}
+                            currentOrder={currentSortOrder}
+                            onSort={onSort}
+                            align="right"
+                        />
                         <TableHead className="text-center">거래소</TableHead>
-                        <TableHead className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                                거래량
-                                <ArrowUpDown className="size-4 text-gray-400" />
-                            </div>
-                        </TableHead>
-                        <TableHead className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                                거래대금
-                                <ArrowUpDown className="size-4 text-gray-400" />
-                            </div>
-                        </TableHead>
+                        <SortableTableHead
+                            field="accumulatedTradingVolume"
+                            label="거래량"
+                            currentField={currentSortField}
+                            currentOrder={currentSortOrder}
+                            onSort={onSort}
+                            align="right"
+                        />
+                        <SortableTableHead
+                            field="accumulatedTradingValue"
+                            label="거래대금"
+                            currentField={currentSortField}
+                            currentOrder={currentSortOrder}
+                            onSort={onSort}
+                            align="right"
+                        />
                     </TableRow>
                 </TableHeader>
 
@@ -72,12 +82,12 @@ const StockTable = ({stocks, onFavoriteToggle}: StockTableProps) => {
                             <TableCell>
                                 <button
                                     type="button"
-                                    onClick={() => handleFavoriteToggle(stock)}
+                                    onClick={() => {
+                                        console.log(stock)
+                                    }}
                                     className="flex items-center justify-center w-full h-full"
                                 >
-                                    <Star
-                                        className={cn('size-3 transition-colors', 'fill-yellow-400 text-yellow-400')}
-                                    />
+                                    <Star className={cn('size-3 transition-colors', 'fill-gray-400 text-gray-400')} />
                                 </button>
                             </TableCell>
                             <TableCell>
