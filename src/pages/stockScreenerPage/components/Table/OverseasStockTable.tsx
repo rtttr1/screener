@@ -1,12 +1,11 @@
 import {useSearchParams} from 'react-router-dom'
 
-import type {OverseasStockExchangeType} from '@/pages/stockScreenerPage/types/api'
+import type {OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField} from '@/pages/stockScreenerPage/types/tableSort'
 
 import {useOverseasStockList} from '@/pages/stockScreenerPage/api/query'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
-import {OVERSEAS_MARKETS} from '@/pages/stockScreenerPage/constants/overseasMarket'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
 
@@ -15,22 +14,14 @@ interface OverseasStockTableProps {
     onFavoriteToggle: (stock: Stock) => void
 }
 
-const OVERSEAS_MARKET_TO_EXCHANGE_TYPE: Record<string, OverseasStockExchangeType> = {
-    [OVERSEAS_MARKETS.NASDAQ]: 'NASDAQ',
-    [OVERSEAS_MARKETS.NYSE]: 'NYSE',
-    [OVERSEAS_MARKETS.AMEX]: 'AMEX',
-} as const
-
 const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTableProps) => {
     const [searchParams] = useSearchParams()
-    const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) || OVERSEAS_MARKETS.NASDAQ
+    const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) as OverseasMarketType
 
     const {sortState, handleSort} = useTableSort<SortField>()
 
-    const stockExchangeType = OVERSEAS_MARKET_TO_EXCHANGE_TYPE[currentOverseasMarket] || 'NASDAQ'
-
     const {data: overseasStockList} = useOverseasStockList({
-        stockExchangeType,
+        stockExchangeType: currentOverseasMarket,
         sortType: 'marketValue',
     })
 

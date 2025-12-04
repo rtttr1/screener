@@ -1,7 +1,7 @@
 export const OVERSEAS_MARKETS = {
-    NASDAQ: 'nasdaq',
-    NYSE: 'nyse',
-    AMEX: 'amex',
+    NASDAQ: 'NASDAQ',
+    NYSE: 'NYSE',
+    AMEX: 'AMEX',
 } as const
 
 export type OverseasMarketType = (typeof OVERSEAS_MARKETS)[keyof typeof OVERSEAS_MARKETS]
