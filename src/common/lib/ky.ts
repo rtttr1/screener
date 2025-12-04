@@ -1,7 +1,15 @@
 import ky from 'ky'
 
-export const api = ky.create({
-    prefixUrl: import.meta.env.VITE_API_BASE_URL || '/api',
+export const mStockClient = ky.create({
+    prefixUrl: '/m-stock',
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+})
+
+export const apiStockClient = ky.create({
+    prefixUrl: '/api-stock',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',

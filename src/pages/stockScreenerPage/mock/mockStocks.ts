@@ -1,4 +1,4 @@
-import type {Stock} from '@/pages/stockScreenerPage/types/stock'
+import type {Stock} from '@/pages/stockScreenerPage/types/api'
 
 export const mockStocks: Stock[] = [
     {

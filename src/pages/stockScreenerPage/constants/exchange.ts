@@ -1,6 +1,6 @@
 export const EXCHANGES = {
-    KOSPI: 'kospi', // 코스피
-    KOSDAQ: 'kosdaq', // 코스닥
+    KOSPI: 'KOSPI', // 코스피
+    KOSDAQ: 'KOSDAQ', // 코스닥
 } as const
 
 export type ExchangeType = (typeof EXCHANGES)[keyof typeof EXCHANGES]
