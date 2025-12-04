@@ -1,20 +1,26 @@
-export const getChangeStatusColor = (status: string) => {
-    if (status === 'FALLING' || status === '하락' || status === '하한') {
+import type {PriceChangeStatus} from '@/pages/stockScreenerPage/types/stock'
+
+export const getChangeStatusColor = (status: PriceChangeStatus) => {
+    if (status === 'FALLING') {
         return 'text-blue-600'
     }
-    if (status === 'RISING' || status === '상승' || status === '상한') {
+    if (status === 'RISING') {
         return 'text-red-600'
     }
     return 'text-gray-900'
 }
 
-export const getChangeStatusLabel = (status: string) => {
-    const labels: Record<string, string> = {
-        RISING: '상승',
-        FALLING: '하락',
-        UNCHANGED: '보합',
+export const getChangeStatusLabel = (status: PriceChangeStatus) => {
+    if (status === 'FALLING') {
+        return '하락'
     }
-    return labels[status] || status
+    if (status === 'RISING') {
+        return '상승'
+    }
+    if (status === 'UNCHANGED') {
+        return '보합'
+    }
+    return status
 }
 
 export const getChangeRateColor = (changeRate: string) => {
@@ -29,11 +35,13 @@ export const getChangeRateColor = (changeRate: string) => {
 }
 
 export const getExchangeLabel = (exchange: string) => {
-    const labels: Record<string, string> = {
-        KOSPI: '코스피',
-        KOSDAQ: '코스닥',
+    if (exchange === 'KOSPI') {
+        return '코스피'
     }
-    return labels[exchange] || exchange
+    if (exchange === 'KOSDAQ') {
+        return '코스닥'
+    }
+    return exchange
 }
 
 export const formatPriceWithCurrency = (price: string, currencyCode: string) => {
