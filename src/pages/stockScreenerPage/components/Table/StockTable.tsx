@@ -103,17 +103,18 @@ const StockTable = ({
                             </button>
                         </TableCell>
                         <TableCell>
-                            {stock.logoUrl ? (
-                                <img
-                                    src={stock.logoUrl}
-                                    alt={`${stock.stockName} 로고`}
-                                    className="size-8 rounded-full object-contain"
-                                />
-                            ) : (
-                                <div className="size-8 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-400">
-                                    {stock.stockName.charAt(0)}
-                                </div>
-                            )}
+                            <img
+                                src={`https://ssl.pstatic.net/imgstock/fn/stage/logo/stock/Stock${stock.itemCode}.svg`}
+                                alt={`${stock.stockName} 로고`}
+                                width={24}
+                                height={24}
+                                className="rounded-full object-contain"
+                                onError={(event) => {
+                                    event.currentTarget.onerror = null
+                                    event.currentTarget.src =
+                                        'https://ssl.pstatic.net/imgstock/fn/stage/logo/common/CompanyLogoCommon.svg'
+                                }}
+                            />
                         </TableCell>
                         <TableCell>
                             <span className="text-xs text-gray-500">{stock.itemCode}</span>
