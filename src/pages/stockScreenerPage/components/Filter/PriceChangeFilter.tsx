@@ -2,8 +2,8 @@ import {useAtom} from 'jotai'
 
 import type {PriceChangeType} from '@/pages/stockScreenerPage/constants/priceChange'
 
+import MultiSelectFilter from '@/common/components/MultiSelectFilter'
 import {priceChangeFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import MultiSelectFilter from '@/pages/stockScreenerPage/components/MultiSelectFilter'
 import {PRICE_CHANGE_OPTIONS} from '@/pages/stockScreenerPage/constants/priceChange'
 
 const PriceChangeFilter = () => {

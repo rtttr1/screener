@@ -8,7 +8,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/c
 import {cn} from '@/common/utils/cn'
 import {useDomesticStockList} from '@/pages/stockScreenerPage/api/query'
 import {exchangeFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import SortableTableHead from '@/pages/stockScreenerPage/components/SortableTableHead'
+import SortableTableHead from '@/pages/stockScreenerPage/components/Table/SortableTableHead'
 import {
     formatPriceWithCurrency,
     getChangeStatusColor,

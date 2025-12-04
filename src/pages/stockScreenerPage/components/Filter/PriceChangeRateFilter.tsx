@@ -2,8 +2,8 @@ import {useAtom} from 'jotai'
 
 import type {PriceChangeRateType} from '@/pages/stockScreenerPage/constants/priceChangeRate'
 
+import Filter from '@/common/components/Filter'
 import {priceChangeRateFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import Filter from '@/pages/stockScreenerPage/components/Filter'
 import {PRICE_CHANGE_RATE_OPTIONS} from '@/pages/stockScreenerPage/constants/priceChangeRate'
 
 const PriceChangeRateFilter = () => {

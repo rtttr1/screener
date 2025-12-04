@@ -1,10 +1,10 @@
 import {useAtom} from 'jotai'
 
 import {hasActiveFiltersAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import ExchangeFilter from '@/pages/stockScreenerPage/components/ExchangeFilter'
-import FilterResetAllButton from '@/pages/stockScreenerPage/components/FilterResetAllButton'
-import PriceChangeFilter from '@/pages/stockScreenerPage/components/PriceChangeFilter'
-import PriceChangeRateFilter from '@/pages/stockScreenerPage/components/PriceChangeRateFilter'
+import ExchangeFilter from '@/pages/stockScreenerPage/components/Filter/ExchangeFilter'
+import FilterResetAllButton from '@/pages/stockScreenerPage/components/Filter/FilterResetAllButton'
+import PriceChangeFilter from '@/pages/stockScreenerPage/components/Filter/PriceChangeFilter'
+import PriceChangeRateFilter from '@/pages/stockScreenerPage/components/Filter/PriceChangeRateFilter'
 
 const FilterSection = () => {
     const [hasActiveFilters] = useAtom(hasActiveFiltersAtom)
