@@ -1,19 +1,26 @@
-import type {Stock} from '@/pages/stockScreenerPage/types/api'
-import type {SortField} from '@/pages/stockScreenerPage/types/tableSort'
+import {useSearchParams} from 'react-router-dom'
 
-import FilterSection from '@/pages/stockScreenerPage/components/FilterSection'
-import StockMarketSelectionSection from '@/pages/stockScreenerPage/components/StockMarketSelectionSection'
-import StockTable from '@/pages/stockScreenerPage/components/StockTable'
-import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
+import type {Stock} from '@/pages/stockScreenerPage/types/api'
+
+import FilterSection from '@/pages/stockScreenerPage/components/Filter/FilterSection'
+import DomesticStockTable from '@/pages/stockScreenerPage/components/Table/DomesticStockTable'
+import OverseasStockTable from '@/pages/stockScreenerPage/components/Table/OverseasStockTable'
+import StockMarketSelectionSection from '@/pages/stockScreenerPage/components/Table/StockMarketSelectionSection'
+import {REGIONS} from '@/pages/stockScreenerPage/constants/region'
+import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 
 const StockScreenerPage = () => {
-    const {sortState, handleSort} = useTableSort<SortField>()
+    const [searchParams] = useSearchParams()
+    const currentRegion = searchParams.get(URL_QUERIES.REGION) || REGIONS.DOMESTIC
 
     const favoriteStocks: Stock[] = []
 
-    const handleFavoriteToggle = () => {
+    const handleFavoriteToggle = (stock: Stock) => {
         // TODO: 즐겨찾기 토글 로직 구현
+        console.log('Toggle favorite:', stock)
     }
+
+    const isDomestic = currentRegion === REGIONS.DOMESTIC
 
     return (
         <main className="px-8 py-4">
@@ -22,13 +29,11 @@ const StockScreenerPage = () => {
                 <FilterSection />
             </div>
 
-            <StockTable
-                favoriteStocks={favoriteStocks}
-                onFavoriteToggle={handleFavoriteToggle}
-                currentSortField={sortState.field}
-                currentSortOrder={sortState.order}
-                onSort={handleSort}
-            />
+            {isDomestic ? (
+                <DomesticStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
+            ) : (
+                <OverseasStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
+            )}
         </main>
     )
 }
