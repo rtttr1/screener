@@ -3,7 +3,8 @@ import {useAtomValue} from 'jotai'
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField} from '@/pages/stockScreenerPage/types/tableSort'
 
-import {useDomesticStockList} from '@/pages/stockScreenerPage/api/query'
+import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
+import {useInfiniteDomesticStockList} from '@/pages/stockScreenerPage/api/query'
 import {exchangeFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
@@ -19,22 +20,39 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
 
     const {sortState, handleSort} = useTableSort<SortField>()
 
-    const {data: domesticStockList} = useDomesticStockList({
+    const {
+        data: domesticStockList,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useInfiniteDomesticStockList({
         sortType: 'marketValue',
         category,
     })
 
-    const stocks = domesticStockList?.result?.stocks || []
+    const stocks = domesticStockList?.pages.flatMap((page) => page.result.stocks) || []
+
+    const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage)
+    const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
 
     return (
-        <StockTable
-            stocks={stocks}
-            favoriteStocks={favoriteStocks}
-            onFavoriteToggle={onFavoriteToggle}
-            currentSortField={sortState.field}
-            currentSortOrder={sortState.order}
-            onSort={handleSort}
-        />
+        <>
+            <StockTable
+                stocks={stocks}
+                favoriteStocks={favoriteStocks}
+                onFavoriteToggle={onFavoriteToggle}
+                currentSortField={sortState.field}
+                currentSortOrder={sortState.order}
+                onSort={handleSort}
+            />
+            <div ref={loadMoreRef} className="h-8" />
+
+            {isFetchingNextPage && (
+                <div className="mt-2 flex justify-center py-4">
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
+                </div>
+            )}
+        </>
     )
 }
 
