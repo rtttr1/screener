@@ -1,6 +1,4 @@
-import type {PriceChangeStatus} from '@/pages/stockScreenerPage/types/stock'
-
-export const getChangeStatusColor = (status: PriceChangeStatus) => {
+export const getChangeStatusColor = (status: string) => {
     if (status === 'FALLING') {
         return 'text-blue-600'
     }
@@ -10,7 +8,7 @@ export const getChangeStatusColor = (status: PriceChangeStatus) => {
     return 'text-gray-900'
 }
 
-export const getChangeStatusLabel = (status: PriceChangeStatus) => {
+export const getChangeStatusLabel = (status: string) => {
     if (status === 'FALLING') {
         return '하락'
     }
