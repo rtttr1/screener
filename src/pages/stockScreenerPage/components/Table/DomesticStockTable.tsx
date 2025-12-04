@@ -36,7 +36,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
 
     return (
-        <>
+        <div className="mt-4 rounded-lg border">
             <StockTable
                 stocks={stocks}
                 favoriteStocks={favoriteStocks}
@@ -45,14 +45,14 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
                 currentSortOrder={sortState.order}
                 onSort={handleSort}
             />
-            <div ref={loadMoreRef} className="h-8" />
+            <div ref={loadMoreRef} className="h-1" />
 
             {isFetchingNextPage && (
-                <div className="mt-2 flex justify-center py-4">
+                <div className="mt-2 flex justify-center items-center py-4 h-20">
                     <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
                 </div>
             )}
-        </>
+        </div>
     )
 }
 
