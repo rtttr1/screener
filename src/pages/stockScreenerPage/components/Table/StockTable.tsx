@@ -1,4 +1,3 @@
-import {useAtomValue} from 'jotai'
 import {Star} from 'lucide-react'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
@@ -6,9 +5,7 @@ import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/tableSo
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
-import {useDomesticStockList} from '@/pages/stockScreenerPage/api/query'
-import {exchangeFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import SortableTableHead from '@/pages/stockScreenerPage/components/SortableTableHead'
+import SortableTableHead from '@/pages/stockScreenerPage/components/Table/SortableTableHead'
 import {
     formatPriceWithCurrency,
     getChangeStatusColor,
@@ -18,6 +15,7 @@ import {
 } from '@/pages/stockScreenerPage/utils/stockTable'
 
 interface StockTableProps {
+    stocks: Stock[]
     favoriteStocks: Stock[]
     onFavoriteToggle: (stock: Stock) => void
     currentSortField: SortField | null
@@ -26,22 +24,13 @@ interface StockTableProps {
 }
 
 const StockTable = ({
+    stocks,
     favoriteStocks,
     onFavoriteToggle,
     currentSortField,
     currentSortOrder,
     onSort,
 }: StockTableProps) => {
-    const exchangeFilter = useAtomValue(exchangeFilterAtom)
-    const category = exchangeFilter || 'all'
-
-    const {data: domesticStockList} = useDomesticStockList({
-        sortType: 'marketValue',
-        category,
-    })
-
-    const stocks = domesticStockList?.result?.stocks || []
-
     return (
         <div className="mt-4 rounded-lg border">
             <Table>

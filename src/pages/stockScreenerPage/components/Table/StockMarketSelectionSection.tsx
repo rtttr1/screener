@@ -1,7 +1,7 @@
 import {useSearchParams} from 'react-router-dom'
 
-import OverseasMarketTabList from '@/pages/stockScreenerPage/components/OverseasMarketTabList'
-import RegionTabList from '@/pages/stockScreenerPage/components/RegionTabList'
+import OverseasMarketTabList from '@/pages/stockScreenerPage/components/Tab/OverseasMarketTabList'
+import RegionTabList from '@/pages/stockScreenerPage/components/Tab/RegionTabList'
 import {OVERSEAS_MARKETS, type OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
 import {REGIONS, type RegionType} from '@/pages/stockScreenerPage/constants/region'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'

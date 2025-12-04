@@ -2,8 +2,8 @@ import {useAtom} from 'jotai'
 
 import type {ExchangeType} from '@/pages/stockScreenerPage/constants/exchange'
 
+import Filter from '@/common/components/Filter'
 import {exchangeFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import Filter from '@/pages/stockScreenerPage/components/Filter'
 import {EXCHANGE_OPTIONS} from '@/pages/stockScreenerPage/constants/exchange'
 
 const ExchangeFilter = () => {
