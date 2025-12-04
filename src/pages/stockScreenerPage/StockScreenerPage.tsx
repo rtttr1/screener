@@ -15,9 +15,8 @@ const StockScreenerPage = () => {
 
     const favoriteStocks: Stock[] = []
 
-    const handleFavoriteToggle = (stock: Stock) => {
+    const handleFavoriteToggle = (_stock: Stock) => {
         // TODO: 즐겨찾기 토글 로직 구현
-        console.log('Toggle favorite:', stock)
     }
 
     const isDomestic = currentRegion === REGIONS.DOMESTIC
