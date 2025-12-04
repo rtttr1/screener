@@ -16,12 +16,21 @@ import {
 
 interface StockTableProps {
     stocks: Stock[]
+    favoriteStocks: Stock[]
+    onFavoriteToggle: (stock: Stock) => void
     currentSortField: SortField | null
     currentSortOrder: SortOrder
     onSort: (field: SortField) => void
 }
 
-const StockTable = ({stocks, currentSortField, currentSortOrder, onSort}: StockTableProps) => {
+const StockTable = ({
+    stocks,
+    favoriteStocks,
+    onFavoriteToggle,
+    currentSortField,
+    currentSortOrder,
+    onSort,
+}: StockTableProps) => {
     return (
         <div className="mt-4 rounded-lg border">
             <Table>
@@ -82,12 +91,23 @@ const StockTable = ({stocks, currentSortField, currentSortOrder, onSort}: StockT
                             <TableCell>
                                 <button
                                     type="button"
-                                    onClick={() => {
-                                        console.log(stock)
-                                    }}
+                                    onClick={() => onFavoriteToggle(stock)}
                                     className="flex items-center justify-center w-full h-full"
                                 >
-                                    <Star className={cn('size-3 transition-colors', 'fill-gray-400 text-gray-400')} />
+                                    {favoriteStocks.some(
+                                        (favoriteStock) => favoriteStock.itemCode === stock.itemCode,
+                                    ) ? (
+                                        <Star
+                                            className={cn(
+                                                'size-3 transition-colors',
+                                                'fill-yellow-400 text-yellow-400',
+                                            )}
+                                        />
+                                    ) : (
+                                        <Star
+                                            className={cn('size-3 transition-colors', 'fill-gray-400 text-gray-400')}
+                                        />
+                                    )}
                                 </button>
                             </TableCell>
                             <TableCell>
