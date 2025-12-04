@@ -7,4 +7,3 @@ export const api = ky.create({
         'Content-Type': 'application/json',
     },
 })
-
