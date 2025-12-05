@@ -5,7 +5,11 @@ import type {SortField} from '@/pages/stockScreenerPage/types/tableSort'
 
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
 import {useInfiniteDomesticStockList} from '@/pages/stockScreenerPage/api/query'
-import {exchangeFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
+import {
+    exchangeFilterAtom,
+    priceChangeFilterAtom,
+    priceChangeRateFilterAtom,
+} from '@/pages/stockScreenerPage/atoms/filterAtoms'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
 
@@ -16,6 +20,9 @@ interface DomesticStockTableProps {
 
 const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTableProps) => {
     const exchangeFilter = useAtomValue(exchangeFilterAtom)
+    const priceChangeFilter = useAtomValue(priceChangeFilterAtom)
+    const priceChangeRateFilter = useAtomValue(priceChangeRateFilterAtom)
+
     const category = exchangeFilter || 'all'
 
     const {sortState, handleSort} = useTableSort<SortField>()
@@ -25,10 +32,16 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useInfiniteDomesticStockList({
-        sortType: 'marketValue',
-        category,
-    })
+    } = useInfiniteDomesticStockList(
+        {
+            sortType: 'marketValue',
+            category,
+        },
+        {
+            priceChange: priceChangeFilter,
+            priceChangeRate: priceChangeRateFilter,
+        },
+    )
 
     const stocks = domesticStockList?.pages.flatMap((page) => page.result.stocks) || []
 

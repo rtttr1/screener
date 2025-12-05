@@ -1,3 +1,4 @@
+import {useAtomValue} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
 
 import type {OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
@@ -6,6 +7,7 @@ import type {SortField} from '@/pages/stockScreenerPage/types/tableSort'
 
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
 import {useInfiniteOverseasStockList} from '@/pages/stockScreenerPage/api/query'
+import {priceChangeFilterAtom, priceChangeRateFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
@@ -19,6 +21,9 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
     const [searchParams] = useSearchParams()
     const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) as OverseasMarketType
 
+    const priceChangeFilter = useAtomValue(priceChangeFilterAtom)
+    const priceChangeRateFilter = useAtomValue(priceChangeRateFilterAtom)
+
     const {sortState, handleSort} = useTableSort<SortField>()
 
     const {
@@ -26,10 +31,16 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useInfiniteOverseasStockList({
-        stockExchangeType: currentOverseasMarket,
-        sortType: 'marketValue',
-    })
+    } = useInfiniteOverseasStockList(
+        {
+            stockExchangeType: currentOverseasMarket,
+            sortType: 'marketValue',
+        },
+        {
+            priceChange: priceChangeFilter,
+            priceChangeRate: priceChangeRateFilter,
+        },
+    )
 
     const stocks = overseasStockList?.pages.flatMap((page) => page.stocks) || []
 
