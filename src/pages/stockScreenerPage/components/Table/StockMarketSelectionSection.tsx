@@ -1,5 +1,7 @@
+import {useSetAtom} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
 
+import {resetAllFiltersAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
 import OverseasMarketTabList from '@/pages/stockScreenerPage/components/Tab/OverseasMarketTabList'
 import RegionTabList from '@/pages/stockScreenerPage/components/Tab/RegionTabList'
 import {OVERSEAS_MARKETS, type OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
@@ -7,6 +9,7 @@ import {REGIONS, type RegionType} from '@/pages/stockScreenerPage/constants/regi
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 
 const StockMarketSelectionSection = () => {
+    const resetAllFilters = useSetAtom(resetAllFiltersAtom)
     const [searchParams, setSearchParams] = useSearchParams({
         [URL_QUERIES.REGION]: REGIONS.DOMESTIC,
     })
@@ -16,6 +19,8 @@ const StockMarketSelectionSection = () => {
     const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) as OverseasMarketType
 
     const handleRegionTabClick = (region: RegionType) => {
+        resetAllFilters()
+
         if (region === REGIONS.OVERSEAS) {
             setSearchParams({[URL_QUERIES.REGION]: region, [URL_QUERIES.OVERSEAS_MARKET]: OVERSEAS_MARKETS.NASDAQ})
         } else {
@@ -24,6 +29,8 @@ const StockMarketSelectionSection = () => {
     }
 
     const handleOverseasMarketTabClick = (market: OverseasMarketType) => {
+        resetAllFilters()
+
         setSearchParams((prev) => {
             const newParams = new URLSearchParams(prev)
             newParams.set(URL_QUERIES.OVERSEAS_MARKET, market)
