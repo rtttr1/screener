@@ -20,7 +20,7 @@ const StockScreenerPage = () => {
     }
 
     const isDomestic = currentRegion === REGIONS.DOMESTIC
-    
+
     return (
         <main className="px-8 py-4">
             <div className="flex justify-between">
