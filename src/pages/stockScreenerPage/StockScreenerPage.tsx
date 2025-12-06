@@ -1,5 +1,7 @@
 import {useSearchParams} from 'react-router-dom'
 
+import type {Stock} from '@/pages/stockScreenerPage/types/api'
+
 import FilterSection from '@/pages/stockScreenerPage/components/Filter/FilterSection'
 import DomesticStockTable from '@/pages/stockScreenerPage/components/Table/DomesticStockTable'
 import FavoriteStockTable from '@/pages/stockScreenerPage/components/Table/FavoriteStockTable'
@@ -15,7 +17,7 @@ const StockScreenerPage = () => {
 
     const {favoriteStocks, toggleFavorite} = useFavoriteStocks()
 
-    const handleFavoriteToggle = (stock: Parameters<typeof toggleFavorite>[0]) => {
+    const handleFavoriteToggle = (stock: Stock) => {
         toggleFavorite(stock)
     }
 
