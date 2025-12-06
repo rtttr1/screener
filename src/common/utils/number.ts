@@ -1,4 +1,5 @@
 // String 타입 숫자를 안전하게 Number 타입으로 변환
+// 예시: '1,234,567' -> 1234567
 export const getSafeNumberFromString = (value: unknown): number | null => {
     if (value === null || value === undefined) {
         return null
