@@ -1,10 +1,11 @@
 import {ArrowDown, ArrowUp, ArrowUpDown} from 'lucide-react'
 
-import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/tableSort'
+import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/sort'
 import type {ReactElement} from 'react'
 
 import {TableHead} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
+import {SORT_ORDERS} from '@/pages/stockScreenerPage/constants/sort'
 
 interface SortableTableHeadProps {
     field: SortField
@@ -16,13 +17,13 @@ interface SortableTableHeadProps {
 }
 
 const getSortIcon = (isActive: boolean, currentOrder: SortOrder): ReactElement => {
-    if (!isActive || currentOrder === 'none') {
+    if (!isActive || currentOrder === SORT_ORDERS.NONE) {
         return <ArrowUpDown className="size-4 text-gray-400" />
     }
-    if (currentOrder === 'asc') {
+    if (currentOrder === SORT_ORDERS.ASC) {
         return <ArrowUp className="size-4 text-blue-600" />
     }
-    if (currentOrder === 'desc') {
+    if (currentOrder === SORT_ORDERS.DESC) {
         return <ArrowDown className="size-4 text-blue-600" />
     }
 
@@ -58,7 +59,7 @@ const SortableTableHead = ({
                 <span
                     className={cn(
                         'inline-flex items-center gap-1 px-2 py-1 rounded transition-colors',
-                        isActive && currentOrder !== 'none'
+                        isActive && currentOrder !== SORT_ORDERS.NONE
                             ? 'bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100'
                             : 'hover:bg-gray-50',
                     )}

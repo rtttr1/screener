@@ -12,7 +12,7 @@
 
 import {useState} from 'react'
 
-import type {SortOrder} from '@/pages/stockScreenerPage/types/tableSort'
+import type {SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
 interface SortState<T> {
     field: T | null

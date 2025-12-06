@@ -1,7 +1,7 @@
 import {Star} from 'lucide-react'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
-import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/tableSort'
+import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
