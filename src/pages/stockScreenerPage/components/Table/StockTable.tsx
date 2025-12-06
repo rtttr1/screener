@@ -41,9 +41,9 @@ const StockTable = ({
                     <TableHead className="w-[48px]" />
                     <TableHead className="w-[100px]">심볼</TableHead>
                     <TableHead className="w-[200px]">종목명</TableHead>
-                    <TableHead className="text-right">시가총액</TableHead>
                     <TableHead className="text-right">가격</TableHead>
                     <TableHead className="text-right">등락</TableHead>
+                    <TableHead className="text-right">등락값</TableHead>
                     <SortableTableHead
                         field="fluctuationsRatio"
                         label="등락률"
@@ -52,10 +52,10 @@ const StockTable = ({
                         onSort={onSort}
                         align="right"
                     />
-                    <TableHead className="text-center">거래소</TableHead>
+                    <TableHead className="text-right">거래소</TableHead>
                     <SortableTableHead
                         field="quantTop"
-                        label="거래량상위"
+                        label="거래량"
                         currentField={currentSortField}
                         currentOrder={currentSortOrder}
                         onSort={onSort}
@@ -63,7 +63,7 @@ const StockTable = ({
                     />
                     <SortableTableHead
                         field="priceTop"
-                        label="거래대금상위"
+                        label="거래대금"
                         currentField={currentSortField}
                         currentOrder={currentSortOrder}
                         onSort={onSort}
@@ -74,7 +74,7 @@ const StockTable = ({
 
             <TableBody>
                 {stocks.length === 0 ? (
-                    <EmptyTableView colSpan={12} />
+                    <EmptyTableView colSpan={11} />
                 ) : (
                     stocks.map((stock) => {
                         const isFavorite = favoriteStocks.some(
@@ -133,7 +133,12 @@ const StockTable = ({
                                 >
                                     {getChangeStatusLabel(stock.compareToPreviousPrice.name)}
                                 </TableCell>
-                                <TableCell className="text-right">
+                                <TableCell
+                                    className={cn(
+                                        'text-right',
+                                        getChangeStatusColor(stock.compareToPreviousPrice.name),
+                                    )}
+                                >
                                     {formatPriceWithCurrency(
                                         stock.compareToPreviousClosePrice,
                                         stock.currencyType.code,
@@ -142,7 +147,7 @@ const StockTable = ({
                                 <TableCell className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}>
                                     {stock.fluctuationsRatio}%
                                 </TableCell>
-                                <TableCell className="text-center">
+                                <TableCell className="text-right">
                                     {getExchangeLabel(stock.stockExchangeName)}
                                 </TableCell>
                                 <TableCell className="text-right">{stock.accumulatedTradingVolume}</TableCell>
