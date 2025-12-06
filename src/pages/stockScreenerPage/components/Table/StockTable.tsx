@@ -7,6 +7,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/c
 import {cn} from '@/common/utils/cn'
 import EmptyTableView from '@/pages/stockScreenerPage/components/Table/EmptyTableView'
 import SortableTableHead from '@/pages/stockScreenerPage/components/Table/SortableTableHead'
+import {EMPTY_LOGO_URL} from '@/pages/stockScreenerPage/constants/emptyLogo'
 import {
     formatPriceWithCurrency,
     getChangeStatusColor,
@@ -127,8 +128,7 @@ const StockTable = ({
                                         className="rounded-full object-contain"
                                         onError={(event) => {
                                             event.currentTarget.onerror = null
-                                            event.currentTarget.src =
-                                                'https://ssl.pstatic.net/imgstock/fn/stage/logo/common/CompanyLogoCommon.svg'
+                                            event.currentTarget.src = EMPTY_LOGO_URL
                                         }}
                                     />
                                 </TableCell>
