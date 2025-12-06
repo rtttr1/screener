@@ -34,13 +34,13 @@ const StockTable = ({
     onSort,
 }: StockTableProps) => {
     return (
-        <Table>
+        <Table className="w-full">
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[40px]" />
                     <TableHead className="w-[48px]" />
                     <TableHead className="w-[100px]">심볼</TableHead>
-                    <TableHead className="w-[200px]">종목명</TableHead>
+                    <TableHead className="min-w-[200px]">종목명</TableHead>
                     <SortableTableHead
                         field="closePrice"
                         label="가격"
@@ -48,8 +48,9 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[150px] pr-5"
                     />
-                    <TableHead className="text-center">등락</TableHead>
+                    <TableHead className="text-center w-[110px]">등락</TableHead>
                     <SortableTableHead
                         field="compareToPreviousClosePrice"
                         label="등락값"
@@ -57,6 +58,7 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[150px]"
                     />
                     <SortableTableHead
                         field="fluctuationsRatio"
@@ -65,8 +67,9 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[130px]"
                     />
-                    <TableHead className="text-center">거래소</TableHead>
+                    <TableHead className="text-center w-[130px]">거래소</TableHead>
                     <SortableTableHead
                         field="accumulatedTradingVolume"
                         label="거래량"
@@ -74,6 +77,7 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[150px]"
                     />
                     <SortableTableHead
                         field="accumulatedTradingValue"
@@ -82,6 +86,7 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[170px] pr-4"
                     />
                 </TableRow>
             </TableHeader>
@@ -136,7 +141,7 @@ const StockTable = ({
                                     <span className="text-xs text-gray-500">{stock.itemCode}</span>
                                 </TableCell>
                                 <TableCell className="font-medium">{stock.stockName}</TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="text-right pr-5">
                                     {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
                                 </TableCell>
                                 <TableCell
@@ -160,7 +165,7 @@ const StockTable = ({
                                     {getExchangeLabel(stock.stockExchangeName)}
                                 </TableCell>
                                 <TableCell className="text-right">{stock.accumulatedTradingVolume}</TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="text-right pr-4">
                                     {formatPriceWithCurrency(stock.accumulatedTradingValue, stock.currencyType.code)}
                                 </TableCell>
                             </TableRow>

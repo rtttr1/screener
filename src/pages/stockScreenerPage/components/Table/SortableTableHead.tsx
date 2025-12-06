@@ -13,6 +13,7 @@ interface SortableTableHeadProps {
     currentOrder: SortOrder
     onSort: (field: SortField) => void
     align?: 'left' | 'center' | 'right'
+    className?: string
 }
 
 const getSortIcon = (isActive: boolean, currentOrder: SortOrder): ReactElement => {
@@ -32,6 +33,7 @@ const SortableTableHead = ({
     currentOrder,
     onSort,
     align = 'left',
+    className,
 }: SortableTableHeadProps) => {
     const isActive = currentField === field
 
@@ -40,7 +42,9 @@ const SortableTableHead = ({
     }
 
     return (
-        <TableHead className={cn(align === 'right' && 'text-right', align === 'center' && 'text-center')}>
+        <TableHead
+            className={cn(align === 'right' && 'text-right', align === 'center' && 'text-center', className)}
+        >
             <button
                 type="button"
                 onClick={handleClick}
