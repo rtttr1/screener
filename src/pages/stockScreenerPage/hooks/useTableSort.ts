@@ -14,6 +14,8 @@ import {useState} from 'react'
 
 import type {SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
+import {SORT_FIELDS, SORT_ORDERS} from '@/pages/stockScreenerPage/constants/sort'
+
 interface SortState<T> {
     field: T | null
     order: SortOrder
@@ -22,39 +24,39 @@ interface SortState<T> {
 export const useTableSort = <T>(initialField: T | null = null) => {
     const [sortState, setSortState] = useState<SortState<T>>({
         field: initialField,
-        order: initialField ? 'desc' : 'none',
+        order: initialField ? SORT_ORDERS.DESC : SORT_ORDERS.NONE,
     })
 
     const handleSort = (field: T) => {
         setSortState((prev) => {
             // 등락률 필드의 경우: 기본 -> desc -> asc -> 기본
-            if (field === 'fluctuationsRatio') {
-                if (prev.field === 'fluctuationsRatio') {
-                    if (prev.order === 'none') {
-                        return {field, order: 'desc'}
+            if (field === SORT_FIELDS.FLUCTUATIONS_RATIO) {
+                if (prev.field === SORT_FIELDS.FLUCTUATIONS_RATIO) {
+                    if (prev.order === SORT_ORDERS.NONE) {
+                        return {field, order: SORT_ORDERS.DESC}
                     }
-                    if (prev.order === 'desc') {
-                        return {field, order: 'asc'}
+                    if (prev.order === SORT_ORDERS.DESC) {
+                        return {field, order: SORT_ORDERS.ASC}
                     }
-                    if (prev.order === 'asc') {
-                        return {field: null, order: 'none'}
+                    if (prev.order === SORT_ORDERS.ASC) {
+                        return {field: null, order: SORT_ORDERS.NONE}
                     }
                 }
                 // 다른 필드에서 등락률로 전환
-                return {field, order: 'desc'}
+                return {field, order: SORT_ORDERS.DESC}
             }
 
             // 다른 필드의 경우: 기본 -> 활성화(desc) -> 기본
-            if (prev.field === field && prev.order === 'desc') {
-                return {field: null, order: 'none'}
+            if (prev.field === field && prev.order === SORT_ORDERS.DESC) {
+                return {field: null, order: SORT_ORDERS.NONE}
             }
 
             // 다른 필드를 클릭하거나 기본 상태에서 클릭하면 활성화
-            return {field, order: 'desc'}
+            return {field, order: SORT_ORDERS.DESC}
         })
     }
 
-    const resetSort = () => setSortState({field: null, order: 'none'})
+    const resetSort = () => setSortState({field: null, order: SORT_ORDERS.NONE})
 
     return {
         sortState,
