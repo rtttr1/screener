@@ -9,7 +9,23 @@ export interface StockFilters {
     priceChangeRate: PriceChangeRateType | null
 }
 
-const matchesPriceChangeFilter = (stock: Stock, conditions: PriceChangeType[]): boolean => {
+export const filterStocks = (stocks: Stock[], filters: StockFilters): Stock[] => {
+    let filtered = stocks
+
+    if (filters.priceChange.length > 0) {
+        filtered = filtered.filter((stock) => matchesPriceChangeFilter(stock, filters.priceChange))
+    }
+
+    if (filters.priceChangeRate !== null) {
+        filtered = filtered.filter((stock) =>
+            matchesPriceChangeRateFilter(stock, filters.priceChangeRate as PriceChangeRateType),
+        )
+    }
+
+    return filtered
+}
+
+function matchesPriceChangeFilter(stock: Stock, conditions: PriceChangeType[]): boolean {
     const ratio = getSafeNumberFromString(stock.fluctuationsRatio)
 
     return conditions.some((condition) => {
@@ -30,7 +46,7 @@ const matchesPriceChangeFilter = (stock: Stock, conditions: PriceChangeType[]): 
     })
 }
 
-const matchesPriceChangeRateFilter = (stock: Stock, condition: PriceChangeRateType): boolean => {
+function matchesPriceChangeRateFilter(stock: Stock, condition: PriceChangeRateType): boolean {
     const ratio = getSafeNumberFromString(stock.fluctuationsRatio)
     if (ratio === null) {
         return false
@@ -48,20 +64,4 @@ const matchesPriceChangeRateFilter = (stock: Stock, condition: PriceChangeRateTy
         default:
             return false
     }
-}
-
-export const filterStocks = (stocks: Stock[], filters: StockFilters): Stock[] => {
-    let filtered = stocks
-
-    if (filters.priceChange.length > 0) {
-        filtered = filtered.filter((stock) => matchesPriceChangeFilter(stock, filters.priceChange))
-    }
-
-    if (filters.priceChangeRate !== null) {
-        filtered = filtered.filter((stock) =>
-            matchesPriceChangeRateFilter(stock, filters.priceChangeRate as PriceChangeRateType),
-        )
-    }
-
-    return filtered
 }
