@@ -26,12 +26,10 @@ export const filterStocks = (stocks: Stock[], filters: StockFilters): Stock[] =>
 }
 
 function matchesPriceChangeFilter(stock: Stock, conditions: PriceChangeType[]): boolean {
-    const ratio = getSafeNumberFromString(stock.fluctuationsRatio)
-
     return conditions.some((condition) => {
         switch (condition) {
             case PRICE_CHANGE.UPPER_LIMIT:
-                return ratio !== null && ratio >= 30
+                return stock.compareToPreviousPrice.name === PRICE_CHANGE.UPPER_LIMIT
             case PRICE_CHANGE.RISING:
                 return stock.compareToPreviousPrice.name === PRICE_CHANGE.RISING
             case PRICE_CHANGE.UNCHANGED:
@@ -39,7 +37,7 @@ function matchesPriceChangeFilter(stock: Stock, conditions: PriceChangeType[]): 
             case PRICE_CHANGE.FALLING:
                 return stock.compareToPreviousPrice.name === PRICE_CHANGE.FALLING
             case PRICE_CHANGE.LOWER_LIMIT:
-                return ratio !== null && ratio <= -30
+                return stock.compareToPreviousPrice.name === PRICE_CHANGE.LOWER_LIMIT
             default:
                 return false
         }
