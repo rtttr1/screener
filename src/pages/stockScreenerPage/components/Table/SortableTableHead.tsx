@@ -20,9 +20,13 @@ const getSortIcon = (isActive: boolean, currentOrder: SortOrder): ReactElement =
         return <ArrowUpDown className="size-4 text-gray-400" />
     }
     if (currentOrder === 'asc') {
-        return <ArrowUp className="size-4 text-gray-600" />
+        return <ArrowUp className="size-4 text-blue-600" />
     }
-    return <ArrowDown className="size-4 text-gray-600" />
+    if (currentOrder === 'desc') {
+        return <ArrowDown className="size-4 text-blue-600" />
+    }
+
+    return <ArrowDown className="size-4 text-blue-600" />
 }
 
 const SortableTableHead = ({
@@ -45,15 +49,23 @@ const SortableTableHead = ({
                 type="button"
                 onClick={handleClick}
                 className={cn(
-                    'flex items-center gap-1 w-full',
+                    'flex items-center w-full',
                     align === 'right' && 'justify-end',
                     align === 'center' && 'justify-center',
                     align === 'left' && 'justify-start',
-                    'hover:opacity-70 transition-opacity',
                 )}
             >
-                {label}
-                {getSortIcon(isActive, currentOrder)}
+                <span
+                    className={cn(
+                        'inline-flex items-center gap-1 px-2 py-1 rounded transition-colors',
+                        isActive && currentOrder !== 'none'
+                            ? 'bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100'
+                            : 'hover:bg-gray-50',
+                    )}
+                >
+                    {label}
+                    {getSortIcon(isActive, currentOrder)}
+                </span>
             </button>
         </TableHead>
     )
