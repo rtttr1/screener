@@ -41,23 +41,9 @@ const StockTable = ({
                     <TableHead className="w-[48px]" />
                     <TableHead className="w-[100px]">심볼</TableHead>
                     <TableHead className="w-[200px]">종목명</TableHead>
-                    <SortableTableHead
-                        field="closePrice"
-                        label="가격"
-                        currentField={currentSortField}
-                        currentOrder={currentSortOrder}
-                        onSort={onSort}
-                        align="right"
-                    />
-                    <TableHead className="text-center">등락</TableHead>
-                    <SortableTableHead
-                        field="compareToPreviousClosePrice"
-                        label="등락값"
-                        currentField={currentSortField}
-                        currentOrder={currentSortOrder}
-                        onSort={onSort}
-                        align="right"
-                    />
+                    <TableHead className="text-right">시가총액</TableHead>
+                    <TableHead className="text-right">가격</TableHead>
+                    <TableHead className="text-right">등락</TableHead>
                     <SortableTableHead
                         field="fluctuationsRatio"
                         label="등락률"
@@ -68,16 +54,16 @@ const StockTable = ({
                     />
                     <TableHead className="text-center">거래소</TableHead>
                     <SortableTableHead
-                        field="accumulatedTradingVolume"
-                        label="거래량"
+                        field="quantTop"
+                        label="거래량상위"
                         currentField={currentSortField}
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
                     />
                     <SortableTableHead
-                        field="accumulatedTradingValue"
-                        label="거래대금"
+                        field="priceTop"
+                        label="거래대금상위"
                         currentField={currentSortField}
                         currentOrder={currentSortOrder}
                         onSort={onSort}
@@ -88,7 +74,7 @@ const StockTable = ({
 
             <TableBody>
                 {stocks.length === 0 ? (
-                    <EmptyTableView colSpan={11} />
+                    <EmptyTableView colSpan={12} />
                 ) : (
                     stocks.map((stock) => {
                         const isFavorite = favoriteStocks.some(
@@ -141,7 +127,7 @@ const StockTable = ({
                                 </TableCell>
                                 <TableCell
                                     className={cn(
-                                        'text-center',
+                                        'text-right',
                                         getChangeStatusColor(stock.compareToPreviousPrice.name),
                                     )}
                                 >
