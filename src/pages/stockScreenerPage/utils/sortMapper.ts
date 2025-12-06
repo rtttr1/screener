@@ -19,7 +19,7 @@ export const toDomesticApiSortType = (sortState: SortState): SortType => {
     }
 
     if (sortState.field === SORT_FIELDS.FLUCTUATIONS_RATIO) {
-        return sortState.order === SORT_ORDERS.ASC ? 'up' : 'down'
+        return sortState.order === SORT_ORDERS.ASC ? 'down' : 'up'
     }
 
     return sortState.field as SortType
@@ -37,7 +37,7 @@ export const toOverseasApiSortType = (sortState: SortState): OverseasSortType =>
 
     // 등락률 필드의 경우 order에 따라 up/down 선택
     if (sortState.field === SORT_FIELDS.FLUCTUATIONS_RATIO) {
-        return sortState.order === SORT_ORDERS.ASC ? 'up' : 'down'
+        return sortState.order === SORT_ORDERS.ASC ? 'down' : 'up'
     }
 
     // 해외 주식 API는 'quantTop' 대신 'top' 사용
