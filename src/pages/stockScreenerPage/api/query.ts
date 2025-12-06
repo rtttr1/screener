@@ -1,4 +1,4 @@
-import {useInfiniteQuery} from '@tanstack/react-query'
+import {useSuspenseInfiniteQuery} from '@tanstack/react-query'
 
 import type {
     GetDomesticStockListRequest,
@@ -23,7 +23,7 @@ interface InfiniteOverseasData {
 }
 
 export const useInfiniteDomesticStockList = (params: GetDomesticStockListRequest, filters?: StockFilters) => {
-    return useInfiniteQuery({
+    return useSuspenseInfiniteQuery({
         queryKey: ['domesticStockList', 'infinite', params],
         initialPageParam: 1,
         queryFn: ({pageParam}) =>
@@ -57,7 +57,7 @@ function applyFiltersToInfiniteDomesticData(filters: StockFilters) {
 }
 
 export const useInfiniteOverseasStockList = (params: GetOverseasStockListRequest, filters?: StockFilters) => {
-    return useInfiniteQuery({
+    return useSuspenseInfiniteQuery({
         queryKey: ['overseasStockList', 'infinite', params],
         initialPageParam: 1,
         queryFn: ({pageParam}) =>
