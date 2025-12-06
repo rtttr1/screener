@@ -35,8 +35,8 @@ const StockTable = ({
 }: StockTableProps) => {
     return (
         <Table className="w-full">
-            <TableHeader>
-                <TableRow>
+            <TableHeader className="sticky top-0 bg-white">
+                <TableRow className="outline">
                     <TableHead className="w-[40px]" />
                     <TableHead className="w-[48px]" />
                     <TableHead className="w-[100px]">심볼</TableHead>

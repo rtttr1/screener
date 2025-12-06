@@ -49,7 +49,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
 
     return (
-        <div className="w-full rounded-lg border ">
+        <div className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]">
             <StockTable
                 stocks={stocks}
                 favoriteStocks={favoriteStocks}

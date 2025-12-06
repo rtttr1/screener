@@ -7,8 +7,8 @@ const StockTableSkeleton = () => {
     return (
         <div className="w-full rounded-lg border">
             <Table className="w-full">
-                <TableHeader>
-                    <TableRow>
+                <TableHeader className="sticky top-0 bg-white">
+                    <TableRow className="border-b border-gray-200">
                         <TableHead className="w-[40px]" />
                         <TableHead className="w-[48px]" />
                         <TableHead className="w-[100px]">
