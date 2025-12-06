@@ -40,7 +40,7 @@ const StockTable = ({
                     <TableHead className="w-[40px]" />
                     <TableHead className="w-[48px]" />
                     <TableHead className="w-[100px]">심볼</TableHead>
-                    <TableHead className="min-w-[200px]">종목명</TableHead>
+                    <TableHead className="min-w-[200px] max-w-[300px]">종목명</TableHead>
                     <SortableTableHead
                         field="closePrice"
                         label="가격"
@@ -130,7 +130,13 @@ const StockTable = ({
                                         alt={`${stock.stockName} 로고`}
                                         width={24}
                                         height={24}
-                                        className="rounded-full object-contain"
+                                        className="h-6 w-6 rounded-full object-contain"
+                                        style={{
+                                            minWidth: '24px',
+                                            minHeight: '24px',
+                                            maxWidth: '24px',
+                                            maxHeight: '24px',
+                                        }}
                                         onError={(event) => {
                                             event.currentTarget.onerror = null
                                             event.currentTarget.src = EMPTY_LOGO_URL
@@ -140,7 +146,9 @@ const StockTable = ({
                                 <TableCell>
                                     <span className="text-xs text-gray-500">{stock.itemCode}</span>
                                 </TableCell>
-                                <TableCell className="font-medium">{stock.stockName}</TableCell>
+                                <TableCell className="font-medium max-w-[300px] truncate" title={stock.stockName}>
+                                    {stock.stockName}
+                                </TableCell>
                                 <TableCell className="text-right pr-5">
                                     {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
                                 </TableCell>
