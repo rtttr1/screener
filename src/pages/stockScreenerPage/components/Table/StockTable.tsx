@@ -89,69 +89,83 @@ const StockTable = ({
                 {stocks.length === 0 ? (
                     <EmptyTableView colSpan={11} />
                 ) : (
-                    stocks.map((stock) => (
-                        <TableRow key={stock.itemCode}>
-                            <TableCell>
-                                <button
-                                    type="button"
-                                    onClick={() => onFavoriteToggle(stock)}
-                                    className="flex items-center justify-center w-full h-full"
-                                >
-                                    {favoriteStocks.some(
-                                        (favoriteStock) => favoriteStock.itemCode === stock.itemCode,
-                                    ) ? (
+                    stocks.map((stock) => {
+                        const isFavorite = favoriteStocks.some(
+                            (favoriteStock) => favoriteStock.itemCode === stock.itemCode,
+                        )
+
+                        return (
+                            <TableRow key={stock.itemCode}>
+                                <TableCell>
+                                    <button
+                                        type="button"
+                                        onClick={() => onFavoriteToggle(stock)}
+                                        aria-label={
+                                            isFavorite
+                                                ? `${stock.stockName} 관심종목 해제`
+                                                : `${stock.stockName} 관심종목 추가`
+                                        }
+                                        aria-pressed={isFavorite}
+                                        className="flex items-center justify-center w-full h-full"
+                                    >
                                         <Star
                                             className={cn(
                                                 'size-3 transition-colors',
-                                                'fill-yellow-400 text-yellow-400',
+                                                isFavorite
+                                                    ? 'fill-yellow-400 text-yellow-400'
+                                                    : 'fill-gray-400 text-gray-400',
                                             )}
                                         />
-                                    ) : (
-                                        <Star
-                                            className={cn('size-3 transition-colors', 'fill-gray-400 text-gray-400')}
-                                        />
+                                    </button>
+                                </TableCell>
+                                <TableCell>
+                                    <img
+                                        src={`https://ssl.pstatic.net/imgstock/fn/stage/logo/stock/Stock${stock.itemCode}.svg`}
+                                        alt={`${stock.stockName} 로고`}
+                                        width={24}
+                                        height={24}
+                                        className="rounded-full object-contain"
+                                        onError={(event) => {
+                                            event.currentTarget.onerror = null
+                                            event.currentTarget.src =
+                                                'https://ssl.pstatic.net/imgstock/fn/stage/logo/common/CompanyLogoCommon.svg'
+                                        }}
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <span className="text-xs text-gray-500">{stock.itemCode}</span>
+                                </TableCell>
+                                <TableCell className="font-medium">{stock.stockName}</TableCell>
+                                <TableCell className="text-right">
+                                    {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
+                                </TableCell>
+                                <TableCell
+                                    className={cn(
+                                        'text-center',
+                                        getChangeStatusColor(stock.compareToPreviousPrice.name),
                                     )}
-                                </button>
-                            </TableCell>
-                            <TableCell>
-                                <img
-                                    src={`https://ssl.pstatic.net/imgstock/fn/stage/logo/stock/Stock${stock.itemCode}.svg`}
-                                    alt={`${stock.stockName} 로고`}
-                                    width={24}
-                                    height={24}
-                                    className="rounded-full object-contain"
-                                    onError={(event) => {
-                                        event.currentTarget.onerror = null
-                                        event.currentTarget.src =
-                                            'https://ssl.pstatic.net/imgstock/fn/stage/logo/common/CompanyLogoCommon.svg'
-                                    }}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <span className="text-xs text-gray-500">{stock.itemCode}</span>
-                            </TableCell>
-                            <TableCell className="font-medium">{stock.stockName}</TableCell>
-                            <TableCell className="text-right">
-                                {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
-                            </TableCell>
-                            <TableCell
-                                className={cn('text-center', getChangeStatusColor(stock.compareToPreviousPrice.name))}
-                            >
-                                {getChangeStatusLabel(stock.compareToPreviousPrice.name)}
-                            </TableCell>
-                            <TableCell className="text-right">
-                                {formatPriceWithCurrency(stock.compareToPreviousClosePrice, stock.currencyType.code)}
-                            </TableCell>
-                            <TableCell className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}>
-                                {stock.fluctuationsRatio}%
-                            </TableCell>
-                            <TableCell className="text-center">{getExchangeLabel(stock.stockExchangeName)}</TableCell>
-                            <TableCell className="text-right">{stock.accumulatedTradingVolume}</TableCell>
-                            <TableCell className="text-right">
-                                {formatPriceWithCurrency(stock.accumulatedTradingValue, stock.currencyType.code)}
-                            </TableCell>
-                        </TableRow>
-                    ))
+                                >
+                                    {getChangeStatusLabel(stock.compareToPreviousPrice.name)}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    {formatPriceWithCurrency(
+                                        stock.compareToPreviousClosePrice,
+                                        stock.currencyType.code,
+                                    )}
+                                </TableCell>
+                                <TableCell className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}>
+                                    {stock.fluctuationsRatio}%
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    {getExchangeLabel(stock.stockExchangeName)}
+                                </TableCell>
+                                <TableCell className="text-right">{stock.accumulatedTradingVolume}</TableCell>
+                                <TableCell className="text-right">
+                                    {formatPriceWithCurrency(stock.accumulatedTradingValue, stock.currencyType.code)}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })
                 )}
             </TableBody>
         </Table>
