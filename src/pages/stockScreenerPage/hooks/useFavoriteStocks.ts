@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 
+import {toast} from '@/common/components/toast'
 import {safeLocalStorage} from '@/common/utils/localStorage'
 
 const MAX_FAVORITE_STOCKS_COUNT = 20
@@ -43,6 +44,9 @@ export const useFavoriteStocks = () => {
             }
 
             if (prev.length >= MAX_FAVORITE_STOCKS_COUNT) {
+                toast({
+                    title: '관심종목은 20개까지만 등록할 수 있습니다.',
+                })
                 return prev
             }
 
