@@ -96,7 +96,7 @@ function applyFiltersToInfiniteOverseasData(pages: InfiniteOverseasData['pages']
     }))
 }
 
-export const useRealTimeStock = (type: 'domestic' | 'worldstock', reutersCodes: string[]) => {
+export const useRealTimeStockQuery = (type: 'domestic' | 'worldstock', reutersCodes: string[]) => {
     return useQuery({
         queryKey: ['realtime', type],
         queryFn: () =>
