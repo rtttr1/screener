@@ -1,7 +1,7 @@
 import {Star} from 'lucide-react'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
-import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/tableSort'
+import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
@@ -40,26 +40,12 @@ const StockTable = ({
                     <TableHead className="w-[40px]" />
                     <TableHead className="w-[48px]" />
                     <TableHead className="w-[100px]">심볼</TableHead>
+
                     <TableHead className="min-w-[200px] max-w-[300px]">종목명</TableHead>
-                    <SortableTableHead
-                        field="closePrice"
-                        label="가격"
-                        currentField={currentSortField}
-                        currentOrder={currentSortOrder}
-                        onSort={onSort}
-                        align="right"
-                        className="w-[150px] pr-5"
-                    />
-                    <TableHead className="text-center w-[110px]">등락</TableHead>
-                    <SortableTableHead
-                        field="compareToPreviousClosePrice"
-                        label="등락값"
-                        currentField={currentSortField}
-                        currentOrder={currentSortOrder}
-                        onSort={onSort}
-                        align="right"
-                        className="w-[150px]"
-                    />
+                    <TableHead className="w-[150px] pr-5 text-right">가격</TableHead>
+                    <TableHead className="w-[110px] text-right">등락</TableHead>
+                    <TableHead className="w-[150px] text-right">등락값</TableHead>
+
                     <SortableTableHead
                         field="fluctuationsRatio"
                         label="등락률"
@@ -71,7 +57,7 @@ const StockTable = ({
                     />
                     <TableHead className="text-center w-[130px]">거래소</TableHead>
                     <SortableTableHead
-                        field="accumulatedTradingVolume"
+                        field="quantTop"
                         label="거래량"
                         currentField={currentSortField}
                         currentOrder={currentSortOrder}
@@ -80,7 +66,7 @@ const StockTable = ({
                         className="w-[150px]"
                     />
                     <SortableTableHead
-                        field="accumulatedTradingValue"
+                        field="priceTop"
                         label="거래대금"
                         currentField={currentSortField}
                         currentOrder={currentSortOrder}
@@ -154,13 +140,18 @@ const StockTable = ({
                                 </TableCell>
                                 <TableCell
                                     className={cn(
-                                        'text-center',
+                                        'text-right',
                                         getChangeStatusColor(stock.compareToPreviousPrice.name),
                                     )}
                                 >
                                     {getChangeStatusLabel(stock.compareToPreviousPrice.name)}
                                 </TableCell>
-                                <TableCell className="text-right">
+                                <TableCell
+                                    className={cn(
+                                        'text-right',
+                                        getChangeStatusColor(stock.compareToPreviousPrice.name),
+                                    )}
+                                >
                                     {formatPriceWithCurrency(
                                         stock.compareToPreviousClosePrice,
                                         stock.currencyType.code,
@@ -169,7 +160,7 @@ const StockTable = ({
                                 <TableCell className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}>
                                     {stock.fluctuationsRatio}%
                                 </TableCell>
-                                <TableCell className="text-center">
+                                <TableCell className="text-right">
                                     {getExchangeLabel(stock.stockExchangeName)}
                                 </TableCell>
                                 <TableCell className="text-right">{stock.accumulatedTradingVolume}</TableCell>

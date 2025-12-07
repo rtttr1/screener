@@ -1,7 +1,7 @@
 import {useAtomValue} from 'jotai'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
-import type {SortField} from '@/pages/stockScreenerPage/types/tableSort'
+import type {SortField} from '@/pages/stockScreenerPage/types/sort'
 
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
 import {useInfiniteDomesticStockList} from '@/pages/stockScreenerPage/api/query'
@@ -12,6 +12,7 @@ import {
 } from '@/pages/stockScreenerPage/atoms/filterAtoms'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
+import {toDomesticApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
 
 interface DomesticStockTableProps {
     favoriteStocks: Stock[]
@@ -27,6 +28,8 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
 
     const {sortState, handleSort} = useTableSort<SortField>()
 
+    const sortType = toDomesticApiSortType(sortState)
+
     const {
         data: domesticStockList,
         fetchNextPage,
@@ -34,7 +37,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
         isFetchingNextPage,
     } = useInfiniteDomesticStockList(
         {
-            sortType: 'marketValue',
+            sortType,
             category,
         },
         {
