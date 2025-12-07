@@ -42,9 +42,7 @@ const SortableTableHead = ({
     }
 
     return (
-        <TableHead
-            className={cn(align === 'right' && 'text-right', align === 'center' && 'text-center', className)}
-        >
+        <TableHead className={cn(align === 'right' && 'text-right', align === 'center' && 'text-center', className)}>
             <button
                 type="button"
                 onClick={handleClick}
