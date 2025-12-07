@@ -116,13 +116,7 @@ const StockTable = ({
                                         alt={`${stock.stockName} 로고`}
                                         width={24}
                                         height={24}
-                                        className="h-6 w-6 rounded-full object-contain"
-                                        style={{
-                                            minWidth: '24px',
-                                            minHeight: '24px',
-                                            maxWidth: '24px',
-                                            maxHeight: '24px',
-                                        }}
+                                        className="min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px] rounded-full object-contain"
                                         onError={(event) => {
                                             event.currentTarget.onerror = null
                                             event.currentTarget.src = EMPTY_LOGO_URL
