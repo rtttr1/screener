@@ -34,16 +34,18 @@ const StockTable = ({
     onSort,
 }: StockTableProps) => {
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
+        <Table className="w-full">
+            <TableHeader className="sticky top-0 bg-white">
+                <TableRow className="outline">
                     <TableHead className="w-[40px]" />
                     <TableHead className="w-[48px]" />
                     <TableHead className="w-[100px]">심볼</TableHead>
-                    <TableHead className="w-[200px]">종목명</TableHead>
-                    <TableHead className="text-right">가격</TableHead>
-                    <TableHead className="text-right">등락</TableHead>
-                    <TableHead className="text-right">등락값</TableHead>
+
+                    <TableHead className="min-w-[200px] max-w-[300px]">종목명</TableHead>
+                    <TableHead className="w-[150px] pr-5 text-right">가격</TableHead>
+                    <TableHead className="w-[110px] text-right">등락</TableHead>
+                    <TableHead className="w-[150px] text-right">등락값</TableHead>
+
                     <SortableTableHead
                         field="fluctuationsRatio"
                         label="등락률"
@@ -51,8 +53,9 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[130px]"
                     />
-                    <TableHead className="text-right">거래소</TableHead>
+                    <TableHead className="text-center w-[130px]">거래소</TableHead>
                     <SortableTableHead
                         field="quantTop"
                         label="거래량"
@@ -60,6 +63,7 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[150px]"
                     />
                     <SortableTableHead
                         field="priceTop"
@@ -68,6 +72,7 @@ const StockTable = ({
                         currentOrder={currentSortOrder}
                         onSort={onSort}
                         align="right"
+                        className="w-[170px] pr-4"
                     />
                 </TableRow>
             </TableHeader>
@@ -111,7 +116,7 @@ const StockTable = ({
                                         alt={`${stock.stockName} 로고`}
                                         width={24}
                                         height={24}
-                                        className="rounded-full object-contain"
+                                        className="min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px] rounded-full object-contain"
                                         onError={(event) => {
                                             event.currentTarget.onerror = null
                                             event.currentTarget.src = EMPTY_LOGO_URL
@@ -121,8 +126,10 @@ const StockTable = ({
                                 <TableCell>
                                     <span className="text-xs text-gray-500">{stock.itemCode}</span>
                                 </TableCell>
-                                <TableCell className="font-medium">{stock.stockName}</TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="font-medium max-w-[300px] truncate" title={stock.stockName}>
+                                    {stock.stockName}
+                                </TableCell>
+                                <TableCell className="text-right pr-5">
                                     {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
                                 </TableCell>
                                 <TableCell
@@ -151,7 +158,7 @@ const StockTable = ({
                                     {getExchangeLabel(stock.stockExchangeName)}
                                 </TableCell>
                                 <TableCell className="text-right">{stock.accumulatedTradingVolume}</TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="text-right pr-4">
                                     {formatPriceWithCurrency(stock.accumulatedTradingValue, stock.currencyType.code)}
                                 </TableCell>
                             </TableRow>

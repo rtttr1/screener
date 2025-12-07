@@ -1,24 +1,37 @@
+import {PRICE_CHANGE} from '@/pages/stockScreenerPage/constants/priceChange'
+
 export const getChangeStatusColor = (status: string) => {
-    if (status === 'FALLING') {
-        return 'text-blue-600'
+    switch (status) {
+        case PRICE_CHANGE.UPPER_LIMIT:
+            return 'text-red-900'
+        case PRICE_CHANGE.RISING:
+            return 'text-red-600'
+        case PRICE_CHANGE.UNCHANGED:
+            return 'text-gray-900'
+        case PRICE_CHANGE.FALLING:
+            return 'text-blue-600'
+        case PRICE_CHANGE.LOWER_LIMIT:
+            return 'text-blue-900'
+        default:
+            return 'text-gray-900'
     }
-    if (status === 'RISING') {
-        return 'text-red-600'
-    }
-    return 'text-gray-900'
 }
 
 export const getChangeStatusLabel = (status: string) => {
-    if (status === 'FALLING') {
-        return '하락'
+    switch (status) {
+        case PRICE_CHANGE.UPPER_LIMIT:
+            return '상한'
+        case PRICE_CHANGE.RISING:
+            return '상승'
+        case PRICE_CHANGE.UNCHANGED:
+            return '보합'
+        case PRICE_CHANGE.FALLING:
+            return '하락'
+        case PRICE_CHANGE.LOWER_LIMIT:
+            return '하한'
+        default:
+            return ''
     }
-    if (status === 'RISING') {
-        return '상승'
-    }
-    if (status === 'UNCHANGED') {
-        return '보합'
-    }
-    return status
 }
 
 export const getChangeRateColor = (changeRate: string) => {

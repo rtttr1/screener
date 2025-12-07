@@ -6,7 +6,7 @@ export interface Stock {
     closePrice: string
     compareToPreviousClosePrice: string
     fluctuationsRatio: string
-    compareToPreviousPrice: {name: 'RISING' | 'FALLING' | 'UNCHANGED'}
+    compareToPreviousPrice: {name: 'UPPER_LIMIT' | 'RISING' | 'FALLING' | 'UNCHANGED' | 'LOWER_LIMIT'}
     accumulatedTradingVolume: string
     accumulatedTradingValue: string
     marketValue: string
