@@ -113,3 +113,7 @@ fe-externship
 │        ├─ types/             # API/도메인 타입 정의
 │        └─ utils/             # 매핑, 정렬, 테이블 유틸
 ```
+
+## 구조 도식화
+<img width="866" height="637" alt="스크린샷 2025-12-08 오후 5 17 53" src="https://github.com/user-attachments/assets/99e57f00-c030-4dea-bcf1-7298dd20dd98" />
+
