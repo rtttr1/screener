@@ -11,36 +11,36 @@
   - Vite
     - 빠른 번들링·HMR로 개발 생산성 향상
   
-- **스타일링**
-  - Tailwind CSS 4
-    - Utility-first 스타일링을 통해 테이블 UI, 정렬 상태, 필터 UI 등을 빠르게 개발
-  - Radix UI
-    - 접근성(A11y)이 보장된 UI 컴포넌트를 기반으로 Checkbox, Popover, Radio Group 등 빠른 구현
-    - tailwind를 사용하여 로컬에서 스타일 직접 변경할 수 있어 유연성 보장
-  - Lucide React
-    - 정렬 아이콘, 관심종목(Star) UI 등 아이콘 렌더링에 사용
+🎨 **스타일링**
+- Tailwind CSS 4
+  - Utility-first 스타일링을 통해 테이블 UI, 정렬 상태, 필터 UI 등을 빠르게 개발
+- Radix UI
+  - 접근성(A11y)이 보장된 UI 컴포넌트를 기반으로 Checkbox, Popover, Radio Group 등 빠른 구현
+  - tailwind를 사용하여 로컬에서 스타일 직접 변경할 수 있어 유연성 보장
+- Lucide React
+  - 정렬 아이콘, 관심종목(Star) UI 등 아이콘 렌더링에 사용
 
-- **데이터 처리 & 상태 관리**
-  - tanstack-query v5
-    - 무한 스크롤(Infinite Query): 국내/해외 주식 리스트를 페이지 단위로 받아오고 스크롤 시 자동 로딩
-    - 실시간 시세 폴링: API에서 내려주는 pollingInterval을 기반으로 정확한 주기 제어
-    - 쿼리 자동 캐싱: 동일 데이터에 대해 불필요한 네트워크 요청 방지
-    - 쿼리 키 기반 상태 관리로 도메인별 데이터를 명확히 분리
-  - Jotai
-    - atom 기반의 Bottom-up 구조의 전역 상태 라이브러리
-    - 정렬/필터 상태
+📦 **데이터 처리 & 상태 관리**
+- tanstack-query v5
+  - 무한 스크롤(Infinite Query): 국내/해외 주식 리스트를 페이지 단위로 받아오고 스크롤 시 자동 로딩
+  - 실시간 시세 폴링: API에서 내려주는 pollingInterval을 기반으로 정확한 주기 제어
+  - 쿼리 자동 캐싱: 동일 데이터에 대해 불필요한 네트워크 요청 방지
+  - 쿼리 키 기반 상태 관리로 도메인별 데이터를 명확히 분리
+- Jotai
+  - atom 기반의 Bottom-up 구조의 전역 상태 라이브러리
+  - 필터 상태, 실시간 시세 추적 종목 코드 관리
 
-- **HTTP 통신**
-  - **ky** 
-    - fetch 기반의 가벼운 HTTP 클라이언트
-
+🔌 **HTTP 통신**
+- **ky** 
+  - fetch 기반의 가벼운 HTTP 클라이언트
+  
 🧹 코드 품질 & 포매팅
 - ESLint (@naverpay/eslint-config)
   - NaverPay FE 팀 규칙 기반으로 일관된 코드 스타일 유지
   - 잠재적인 버그 패턴을 조기에 발견 가능
 - Prettier (@naverpay/prettier-config)
   - 팀 컨벤션에 맞춘 코드 자동 정렬
-  - 협업 간 코드 차이(diff)를 최소화하여 리뷰 가독성 향상
+  - 협업 간 코드 차이를 최소화하여 리뷰 가독성 향상
 ---
 
 
@@ -91,8 +91,7 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 
 - (예: 실시간 시세 최적화, 사용자 경험 개선, 에러/로딩 상태 UX 고도화 등)
 
-### 전체 구조 개요
-
+## 폴더 구조
 ```text
 fe-externship
 ├─ src
