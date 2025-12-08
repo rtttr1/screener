@@ -106,6 +106,5 @@ export const useRealTimeStockQuery = (type: 'domestic' | 'worldstock', reutersCo
             }),
         refetchInterval: (query) => query.state.data?.result.pollingInterval,
         enabled: reutersCodes.length > 0,
-        staleTime: 0,
     })
 }
