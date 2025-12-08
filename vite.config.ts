@@ -17,7 +17,7 @@ export default defineConfig({
             '/m-stock': {
                 target: 'https://m.stock.naver.com',
                 changeOrigin: true,
-                rewrite: (urlPath) => urlPath.replace(/^\/m-stock/, '/front-api/stock'),
+                rewrite: (urlPath) => urlPath.replace(/^\/m-stock/, '/front-api'),
                 configure: (proxy, _options) => {
                     proxy.on('proxyReq', (proxyReq, _req, _res) => {
                         proxyReq.setHeader('origin', 'https://m.stock.naver.com')

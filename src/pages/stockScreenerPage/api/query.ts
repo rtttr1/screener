@@ -1,4 +1,4 @@
-import {useSuspenseInfiniteQuery} from '@tanstack/react-query'
+import {useQuery, useSuspenseInfiniteQuery} from '@tanstack/react-query'
 
 import type {
     GetDomesticStockListRequest,
@@ -7,7 +7,7 @@ import type {
     GetOverseasStockListResponse,
 } from '@/pages/stockScreenerPage/types/api'
 
-import {getDomesticStockList, getOverseasStockList} from '@/pages/stockScreenerPage/api/api'
+import {getDomesticStockList, getOverseasStockList, getRealTimeStock} from '@/pages/stockScreenerPage/api/api'
 import {filterStocks, type StockFilters} from '@/pages/stockScreenerPage/utils/stockFilters'
 
 const DEFAULT_PAGE_SIZE = 20
@@ -32,7 +32,10 @@ export const useInfiniteDomesticStockList = (params: GetDomesticStockListRequest
                 page: pageParam,
                 pageSize: params.pageSize ?? DEFAULT_PAGE_SIZE,
             }),
-        select: filters ? applyFiltersToInfiniteDomesticData(filters) : undefined,
+        select: (data) => {
+            const filteredPages = applyFiltersToInfiniteDomesticData(data.pages, filters)
+            return filteredPages.flatMap((page) => page.result.stocks)
+        },
         getNextPageParam: (lastPage) => {
             const {page, pageSize, totalCount} = lastPage.result
             const nextPage = page + 1
@@ -46,14 +49,14 @@ export const useInfiniteDomesticStockList = (params: GetDomesticStockListRequest
     })
 }
 
-function applyFiltersToInfiniteDomesticData(filters: StockFilters) {
-    return (data: InfiniteDomesticData): InfiniteDomesticData => ({
-        ...data,
-        pages: data.pages.map((page) => ({
-            ...page,
-            result: {...page.result, stocks: filterStocks(page.result.stocks, filters)},
-        })),
-    })
+function applyFiltersToInfiniteDomesticData(pages: InfiniteDomesticData['pages'], filters?: StockFilters) {
+    if (!filters) {
+        return pages
+    }
+    return pages.map((page) => ({
+        ...page,
+        result: {...page.result, stocks: filterStocks(page.result.stocks, filters)},
+    }))
 }
 
 export const useInfiniteOverseasStockList = (params: GetOverseasStockListRequest, filters?: StockFilters) => {
@@ -66,7 +69,10 @@ export const useInfiniteOverseasStockList = (params: GetOverseasStockListRequest
                 page: pageParam,
                 pageSize: params.pageSize ?? DEFAULT_PAGE_SIZE,
             }),
-        select: filters ? applyFiltersToInfiniteOverseasData(filters) : undefined,
+        select: (data) => {
+            const filteredPages = applyFiltersToInfiniteOverseasData(data.pages, filters)
+            return filteredPages.flatMap((page) => page.stocks)
+        },
         getNextPageParam: (lastPage) => {
             const {page, pageSize, totalCount} = lastPage
             const nextPage = page + 1
@@ -80,9 +86,25 @@ export const useInfiniteOverseasStockList = (params: GetOverseasStockListRequest
     })
 }
 
-function applyFiltersToInfiniteOverseasData(filters: StockFilters) {
-    return (data: InfiniteOverseasData): InfiniteOverseasData => ({
-        ...data,
-        pages: data.pages.map((page) => ({...page, stocks: filterStocks(page.stocks, filters)})),
+function applyFiltersToInfiniteOverseasData(pages: InfiniteOverseasData['pages'], filters?: StockFilters) {
+    if (!filters) {
+        return pages
+    }
+    return pages.map((page) => ({
+        ...page,
+        stocks: filterStocks(page.stocks, filters),
+    }))
+}
+
+export const useRealTimeStockQuery = (type: 'domestic' | 'worldstock', reutersCodes: string[]) => {
+    return useQuery({
+        queryKey: ['realtime', type],
+        queryFn: () =>
+            getRealTimeStock({
+                type,
+                reutersCodes,
+            }),
+        refetchInterval: (query) => query.state.data?.result.pollingInterval,
+        enabled: reutersCodes.length > 0,
     })
 }

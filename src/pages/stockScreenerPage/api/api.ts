@@ -3,6 +3,8 @@ import type {
     GetDomesticStockListResponse,
     GetOverseasStockListRequest,
     GetOverseasStockListResponse,
+    GetRealTimeStockRequest,
+    GetRealTimeStockResponse,
     OverseasStockListApiResponse,
 } from '@/pages/stockScreenerPage/types/api'
 
@@ -14,7 +16,7 @@ export const getDomesticStockList = async (
     params: GetDomesticStockListRequest,
 ): Promise<GetDomesticStockListResponse> => {
     return mStockClient
-        .get('domestic/stockList', {searchParams: buildSearchParams(params)})
+        .get('stock/domestic/stockList', {searchParams: buildSearchParams(params)})
         .json<GetDomesticStockListResponse>()
 }
 
@@ -35,4 +37,19 @@ export const getOverseasStockList = async (
         ...response,
         stocks: response.stocks.map(mapOverseasStockToStock),
     }
+}
+
+export const getRealTimeStock = async (params: GetRealTimeStockRequest): Promise<GetRealTimeStockResponse> => {
+    const searchParams = buildSearchParams({
+        type: params.type,
+    })
+
+    return mStockClient
+        .post('realTime/stock', {
+            searchParams,
+            json: {
+                reutersCodes: params.reutersCodes,
+            },
+        })
+        .json<GetRealTimeStockResponse>()
 }

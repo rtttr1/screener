@@ -1,4 +1,5 @@
 import {QueryClientProvider} from '@tanstack/react-query'
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import {Provider} from 'jotai'
 import {RouterProvider} from 'react-router-dom'
 
@@ -13,6 +14,7 @@ function App() {
                 <RouterProvider router={router} />
                 <Toaster />
             </Provider>
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     )
 }

@@ -37,6 +37,7 @@
         "@naverpay/eslint-config": "^2.4.0",
         "@naverpay/prettier-config": "^1.0.1",
         "@svgr/cli": "^8.1.0",
+        "@tanstack/react-query-devtools": "^5.91.1",
         "@types/node": "^24.10.1",
         "@types/react": "^19.2.5",
         "@types/react-dom": "^19.2.3",

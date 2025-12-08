@@ -124,3 +124,41 @@ export interface GetOverseasStockListResponse {
     totalCount: number
     stockListSortType: string
 }
+
+// 실시간 시세 요청 타입
+export interface GetRealTimeStockRequest {
+    type: 'domestic' | 'worldstock'
+    reutersCodes: string[]
+}
+
+// 실시간 시세 응답 아이템 타입
+export interface RealTimeStockItem {
+    itemCode: string
+    stockName: string
+    closePrice: string
+    compareToPreviousClosePrice: string
+    fluctuationsRatio: string
+    compareToPreviousPrice: {
+        name: 'UPPER_LIMIT' | 'RISING' | 'FALLING' | 'UNCHANGED' | 'LOWER_LIMIT'
+    }
+    openPrice?: string
+    highPrice?: string
+    lowPrice?: string
+    accumulatedTradingVolume: string
+    accumulatedTradingValue: string
+    currencyType: {
+        code: string
+        name: string
+    }
+    stockExchangeName?: string
+    marketStatus?: 'OPEN' | 'CLOSE'
+}
+
+// 실시간 시세 응답 타입
+export interface GetRealTimeStockResponse {
+    isSuccess: boolean
+    result: {
+        items: Record<string, RealTimeStockItem>
+        pollingInterval: number
+    }
+}

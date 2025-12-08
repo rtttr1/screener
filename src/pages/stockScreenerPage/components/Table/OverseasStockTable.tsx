@@ -1,24 +1,29 @@
-import {useAtomValue} from 'jotai'
+import {useEffect} from 'react'
+
+import {useAtomValue, useSetAtom} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
 
 import type {OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
-import type {Stock} from '@/pages/stockScreenerPage/types/api'
+import type {RealTimeStockItem, Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField} from '@/pages/stockScreenerPage/types/sort'
 
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
 import {useInfiniteOverseasStockList} from '@/pages/stockScreenerPage/api/query'
 import {priceChangeFilterAtom, priceChangeRateFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
+import {overseasStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodesAtom'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
+import {mergeRealTimeStockData} from '@/pages/stockScreenerPage/utils/mergeRealTimeStockData'
 import {toOverseasApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
 
 interface OverseasStockTableProps {
     favoriteStocks: Stock[]
     onFavoriteToggle: (stock: Stock) => void
+    realTimeData?: Record<string, RealTimeStockItem>
 }
 
-const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTableProps) => {
+const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: OverseasStockTableProps) => {
     const [searchParams] = useSearchParams()
     const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) as OverseasMarketType
 
@@ -26,11 +31,10 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
     const priceChangeRateFilter = useAtomValue(priceChangeRateFilterAtom)
 
     const {sortState, handleSort} = useTableSort<SortField>()
-
     const sortType = toOverseasApiSortType(sortState)
 
     const {
-        data: overseasStockList,
+        data: stocks,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
@@ -45,7 +49,14 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
         },
     )
 
-    const stocks = overseasStockList?.pages.flatMap((page) => page.stocks) || []
+    // stocks 변경 시 종목 코드만 atom에 업데이트
+    const setOverseasStockCodes = useSetAtom(overseasStockCodesAtom)
+    useEffect(() => {
+        const codes = stocks.map((stock) => stock.itemCode)
+        setOverseasStockCodes(codes)
+    }, [stocks, setOverseasStockCodes])
+
+    const stocksWithRealTime = mergeRealTimeStockData(stocks, realTimeData)
 
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
@@ -53,7 +64,7 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
     return (
         <div className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]">
             <StockTable
-                stocks={stocks}
+                stocks={stocksWithRealTime}
                 favoriteStocks={favoriteStocks}
                 onFavoriteToggle={onFavoriteToggle}
                 currentSortField={sortState.field}
