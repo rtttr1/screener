@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react'
+import {useEffect} from 'react'
 
 import {useAtomValue, useSetAtom} from 'jotai'
 
@@ -57,7 +57,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Do
         setDomesticStockCodes(codes)
     }, [stocks, setDomesticStockCodes])
 
-    const stocksWithRealTime = useMemo(() => mergeRealTimeStockData(stocks, realTimeData), [stocks, realTimeData])
+    const stocksWithRealTime = mergeRealTimeStockData(stocks, realTimeData)
 
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)

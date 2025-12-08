@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react'
+import {useEffect} from 'react'
 
 import {useAtomValue, useSetAtom} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
@@ -56,7 +56,7 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Ov
         setOverseasStockCodes(codes)
     }, [stocks, setOverseasStockCodes])
 
-    const stocksWithRealTime = useMemo(() => mergeRealTimeStockData(stocks, realTimeData), [stocks, realTimeData])
+    const stocksWithRealTime = mergeRealTimeStockData(stocks, realTimeData)
 
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)

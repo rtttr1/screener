@@ -1,5 +1,3 @@
-import {useMemo} from 'react'
-
 import {Star} from 'lucide-react'
 
 import type {RealTimeStockItem, Stock} from '@/pages/stockScreenerPage/types/api'
@@ -16,10 +14,7 @@ interface FavoriteStockMiniTableProps {
 }
 
 const FavoriteStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: FavoriteStockMiniTableProps) => {
-    const stocksWithRealTime = useMemo(
-        () => mergeRealTimeStockData(favoriteStocks, realTimeData),
-        [favoriteStocks, realTimeData],
-    )
+    const stocksWithRealTime = mergeRealTimeStockData(favoriteStocks, realTimeData)
 
     return (
         <section aria-label="관심종목 테이블" className="sticky top-4 h-fit w-[500px] rounded-lg border bg-white">
