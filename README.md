@@ -95,47 +95,43 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 
 
 
-### Shared Worker를 활용해 다중창에서 실시간 데이터 업데이트 타이밍 통일화
-### 문제점
+### 1. Shared Worker를 활용해 다중창에서 실시간 데이터 업데이트 타이밍 통일화
+#### 📍 문제점
 - 초기에는 Tanstack Query를 사용하여 각 창에서 독립적으로 polling을 수행해주었습니다.
 - 이로 인해 다중창 환경에서 실시간 데이터 반영 시간이 달라 다중창 유저의 UX가 저하되었습니다.
 
 <img width="700" height="550" alt="스크린샷 2025-12-10 오전 12 52 50" src="https://github.com/user-attachments/assets/d3ef8c7f-39e0-42da-8369-62b9b125c699" />
 
-
-### 개선방향
+#### 📍 개선방향
 - 실시간 시세 polling 로직을 SharedWorker에서 실행하고, 각 창에 데이터를 전달하는 방식으로 구조를 개선해주었습니다.
 - 데이터를 받으면 각 창으로 보내주기 때문에 동일한 타이밍에 데이터가 업데이트 될 수 있게되었습니다.
 
 <img width="700" height="550" alt="스크린샷 2025-12-10 오전 1 50 20" src="https://github.com/user-attachments/assets/ce0452e1-9199-4cbc-8162-f59215f0dfc4" />
 
-### WeakRef를 활용해 메모리 누수 방지
-### 문제점
-- 탭 종료 후에도 worker의 Port 관리 객체에서 MessagePort를 강하게 참조하고 있어 GC 대상이 되지 않음
-- 이로 인해 메모리가 누수되는 현상 발생
+#### 📍 트러블 슈팅 : WeakRef를 활용해 메모리 누수 방지
+- 탭 종료 후에도 worker의 Port 관리 객체에서 MessagePort를 강하게 참조하고 있어 GC 대상이 되지 않아 메모리가 누수되는 현상 발생
 
-### 개선 방향
 - WeakRef를 사용하여 SharedWorker에서 MessagePort를 약하게 참조하도록 변경
+<img width="400" height="250" alt="스크린샷 2025-12-10 오전 2 22 06" src="https://github.com/user-attachments/assets/cb997f52-b811-42ad-9296-37cc2f027e60" />
+
 - 탭 종료 시 탭에서의 강한 참조가 끊어지고, Worker쪽에서 약한 참조만 남아 포트가 GC 대상이 되어 제거됨
-- Port가 제거된 후 빈 WeakRef 인스턴스도 제거하는 로직을 추가해 완전하게 메모리 누수를 방지 
+- Port가 제거된 후 빈 WeakRef 인스턴스도 제거하는 로직을 추가해 완전하게 메모리 누수를 방지해 성능 악화 예방
 
-<img width="542" height="372" alt="스크린샷 2025-12-10 오전 2 22 06" src="https://github.com/user-attachments/assets/cb997f52-b811-42ad-9296-37cc2f027e60" />
+- 다중창 10개를 만들었다가 9개를 닫은 후 상황을 비교
 
-개선 결과
+WeakRef 사용 전: 메모리에 port가 계속 남아 있음
+<img width="250" height="31" alt="스크린샷 2025-12-10 오전 3 07 08" src="https://github.com/user-attachments/assets/a7e30a60-c382-4d91-8568-98f110917e44" />
 
-메모리 누수 방지: 이제 탭이 종료되면 그에 해당하는 포트 객체도 GC 대상이 되어
-더 이상 불필요한 메모리 점유가 발생하지 않음
+WeakRef 사용 후: 일정 시간 후 port가 사라짐
+<img width="254" height="50" alt="스크린샷 2025-12-10 오전 2 37 54" src="https://github.com/user-attachments/assets/17e95f68-ce7f-4c2d-9c79-3e9639d1f729" />
 
-효율적인 자원 관리: SharedWorker가 포트를 약한 참조로만 관리하여,
-포트가 더 이상 사용되지 않으면 자동으로 제거되고,
-SharedWorker의 메모리 사용량을 최적화할 수 있음
 
-애플리케이션 성능 향상: 자원 누수 문제 해결으로
-장시간 사용 시에도 애플리케이션의 성능 저하가 방지됨
+#### 📍 개선 결과
+- 여러 창을 열어도 동일한 순간의 시세가 동시에 반영되는 경험 제공
+- 실시간 데이터의 일관성이 확보되어 멀티태스킹 유저들에게 안정적인 UX 제공
+- polling 로직이 중앙화되어 중복 요청 감소 → 리소스 절약
+- 도메인 컴포넌트에서는 복잡한 실시간 merge 로직 없이 React Query만 구독하면 되는 단순한 구조로 개선됨
 
-### 개선결과
-- 다중창을 열어도 동일한 순간에 시세가 동시에 반영되어 안정적인 UX를 제공합니다.
-- polling 로직이 중앙화되어 중복 요청이 감소해 네트워크를 효율적으로 사용합니다.
 
 ## 폴더 구조
 ```text
@@ -161,5 +157,6 @@ fe-externship
 ```
 
 ## 구조 도식화
-<img width="866" height="637" alt="스크린샷 2025-12-08 오후 5 17 53" src="https://github.com/user-attachments/assets/99e57f00-c030-4dea-bcf1-7298dd20dd98" />
+
+<img width="1119" height="881" alt="스크린샷 2025-12-10 오전 4 09 38" src="https://github.com/user-attachments/assets/749a1e00-fd5c-4af4-b12f-dc8b1a5f0a9c" />
 
