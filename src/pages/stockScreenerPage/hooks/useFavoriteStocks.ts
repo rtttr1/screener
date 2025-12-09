@@ -61,6 +61,6 @@ export const useFavoriteStocks = () => {
     return {
         favoriteStocks,
         toggleFavorite,
-        updateFavoriteStocks
+        updateFavoriteStocks,
     }
 }
