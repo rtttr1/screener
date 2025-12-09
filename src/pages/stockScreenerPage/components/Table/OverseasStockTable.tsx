@@ -4,7 +4,7 @@ import {useAtomValue, useSetAtom} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
 
 import type {OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
-import type {RealTimeStockItem, Stock} from '@/pages/stockScreenerPage/types/api'
+import type {Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField} from '@/pages/stockScreenerPage/types/sort'
 
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
@@ -15,16 +15,14 @@ import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
-import {mergeRealTimeStockData} from '@/pages/stockScreenerPage/utils/mergeRealTimeStockData'
 import {toOverseasApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
 
 interface OverseasStockTableProps {
     favoriteStocks: Stock[]
     onFavoriteToggle: (stock: Stock) => void
-    realTimeData?: Record<string, RealTimeStockItem>
 }
 
-const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: OverseasStockTableProps) => {
+const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTableProps) => {
     const [searchParams] = useSearchParams()
     const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) as OverseasMarketType
 
@@ -58,8 +56,6 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Ov
         setOverseasStockCodes(codes)
     }, [stocks, setOverseasStockCodes])
 
-    const stocksWithRealTime = mergeRealTimeStockData(stocks ?? [], realTimeData)
-
     const isPaginationError = isError && stocks && stocks.length > 0
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
@@ -67,7 +63,7 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Ov
     return (
         <div className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]">
             <StockTable
-                stocks={stocksWithRealTime}
+                stocks={stocks}
                 favoriteStocks={favoriteStocks}
                 onFavoriteToggle={onFavoriteToggle}
                 currentSortField={sortState.field}

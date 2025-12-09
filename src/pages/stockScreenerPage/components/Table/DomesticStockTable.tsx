@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 
 import {useAtomValue, useSetAtom} from 'jotai'
 
-import type {RealTimeStockItem, Stock} from '@/pages/stockScreenerPage/types/api'
+import type {Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField} from '@/pages/stockScreenerPage/types/sort'
 
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
@@ -16,16 +16,14 @@ import {domesticStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodes
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
-import {mergeRealTimeStockData} from '@/pages/stockScreenerPage/utils/mergeRealTimeStockData'
 import {toDomesticApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
 
 interface DomesticStockTableProps {
     favoriteStocks: Stock[]
     onFavoriteToggle: (stock: Stock) => void
-    realTimeData?: Record<string, RealTimeStockItem>
 }
 
-const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: DomesticStockTableProps) => {
+const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTableProps) => {
     const priceChangeFilter = useAtomValue(priceChangeFilterAtom)
     const priceChangeRateFilter = useAtomValue(priceChangeRateFilterAtom)
     const exchangeFilter = useAtomValue(exchangeFilterAtom)
@@ -60,8 +58,6 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Do
         }
     }, [stocks, setDomesticStockCodes])
 
-    const stocksWithRealTime = mergeRealTimeStockData(stocks ?? [], realTimeData)
-
     const isPaginationError = isError && stocks?.length > 0
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
@@ -69,7 +65,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Do
     return (
         <div className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]">
             <StockTable
-                stocks={stocksWithRealTime}
+                stocks={stocks}
                 favoriteStocks={favoriteStocks}
                 onFavoriteToggle={onFavoriteToggle}
                 currentSortField={sortState.field}

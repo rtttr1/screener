@@ -41,6 +41,7 @@ export const useUpdateStockListData = ({
 
             const itemsByCode = payload.result.items
 
+            // 주식 종목리스트 쿼리 업데이트
             if (region === 'domestic') {
                 updateDomesticStockListCache(queryClient, itemsByCode)
             } else if (region === 'worldstock') {
