@@ -14,6 +14,7 @@ import {REGIONS} from '@/pages/stockScreenerPage/constants/region'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useFavoriteStocks} from '@/pages/stockScreenerPage/hooks/useFavoriteStocks'
 import {useRealTimeStockData} from '@/pages/stockScreenerPage/hooks/useRealTimeStockData'
+import {useUpdateStockListQuery} from '@/pages/stockScreenerPage/sharedWorker/useUpdateStockListQuery'
 
 const StockScreenerPage = () => {
     const [searchParams] = useSearchParams()
@@ -25,7 +26,8 @@ const StockScreenerPage = () => {
         toggleFavorite(stock)
     }
 
-    const {domesticRealTimeItems, overseasRealTimeItems, favoriteRealTimeItems} = useRealTimeStockData(favoriteStocks)
+    useRealTimeStockData()
+    useUpdateStockListQuery()
 
     return (
         <main className="px-8 py-4">
@@ -37,25 +39,13 @@ const StockScreenerPage = () => {
             <div className="flex gap-4">
                 <Suspense fallback={<StockTableSkeleton />}>
                     {isDomestic ? (
-                        <DomesticStockTable
-                            favoriteStocks={favoriteStocks}
-                            onFavoriteToggle={handleFavoriteToggle}
-                            realTimeData={domesticRealTimeItems}
-                        />
+                        <DomesticStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
                     ) : (
-                        <OverseasStockTable
-                            favoriteStocks={favoriteStocks}
-                            onFavoriteToggle={handleFavoriteToggle}
-                            realTimeData={overseasRealTimeItems}
-                        />
+                        <OverseasStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
                     )}
                 </Suspense>
                 {favoriteStocks.length > 0 && (
-                    <FavoriteStockTable
-                        favoriteStocks={favoriteStocks}
-                        onFavoriteToggle={handleFavoriteToggle}
-                        realTimeData={favoriteRealTimeItems}
-                    />
+                    <FavoriteStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
                 )}
             </div>
         </main>

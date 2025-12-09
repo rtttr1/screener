@@ -1,4 +1,4 @@
-import {useQuery, useSuspenseInfiniteQuery} from '@tanstack/react-query'
+import {useSuspenseInfiniteQuery} from '@tanstack/react-query'
 
 import type {
     GetDomesticStockListRequest,
@@ -7,7 +7,7 @@ import type {
     GetOverseasStockListResponse,
 } from '@/pages/stockScreenerPage/types/api'
 
-import {getDomesticStockList, getOverseasStockList, getRealTimeStock} from '@/pages/stockScreenerPage/api/api'
+import {getDomesticStockList, getOverseasStockList} from '@/pages/stockScreenerPage/api/api'
 import {filterStocks, type StockFilters} from '@/pages/stockScreenerPage/utils/stockFilters'
 
 const DEFAULT_PAGE_SIZE = 20
@@ -94,17 +94,4 @@ function applyFiltersToInfiniteOverseasData(pages: InfiniteOverseasData['pages']
         ...page,
         stocks: filterStocks(page.stocks, filters),
     }))
-}
-
-export const useRealTimeStockQuery = (type: 'domestic' | 'worldstock', reutersCodes: string[]) => {
-    return useQuery({
-        queryKey: ['realtime', type],
-        queryFn: () =>
-            getRealTimeStock({
-                type,
-                reutersCodes,
-            }),
-        refetchInterval: (query) => query.state.data?.result.pollingInterval,
-        enabled: reutersCodes.length > 0,
-    })
 }
