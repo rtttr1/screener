@@ -54,8 +54,13 @@ export const useFavoriteStocks = () => {
         })
     }
 
+    const updateFavoriteStocks = (stocks: Stock[]) => {
+        setFavoriteStocks(stocks)
+    }
+
     return {
         favoriteStocks,
         toggleFavorite,
+        updateFavoriteStocks
     }
 }

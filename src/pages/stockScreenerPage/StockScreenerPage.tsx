@@ -16,20 +16,23 @@ import {REGIONS} from '@/pages/stockScreenerPage/constants/region'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useFavoriteStocks} from '@/pages/stockScreenerPage/hooks/useFavoriteStocks'
 import {useRealTimeStockData} from '@/pages/stockScreenerPage/hooks/useRealTimeStockData'
-import {useUpdateStockListQuery} from '@/pages/stockScreenerPage/sharedWorker/useUpdateStockListQuery'
+import {useUpdateStockListData} from '@/pages/stockScreenerPage/sharedWorker/useUpdateStockListData'
 
 const StockScreenerPage = () => {
     const [searchParams] = useSearchParams()
     const currentRegion = searchParams.get(URL_QUERIES.REGION) || REGIONS.DOMESTIC
     const isDomestic = currentRegion === REGIONS.DOMESTIC
 
-    const {favoriteStocks, toggleFavorite} = useFavoriteStocks()
+    const {favoriteStocks, toggleFavorite, updateFavoriteStocks} = useFavoriteStocks()
     const handleFavoriteToggle = (stock: Stock) => {
         toggleFavorite(stock)
     }
 
     useRealTimeStockData()
-    useUpdateStockListQuery()
+    useUpdateStockListData({
+        updateFavoriteStocks,
+        favoriteStocks,
+    })
 
     return (
         <main className="px-8 py-4">

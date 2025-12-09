@@ -9,9 +9,18 @@ import type {
     GetDomesticStockListResponse,
     GetOverseasStockListResponse,
     RealTimeStockItem,
+    Stock,
 } from '@/pages/stockScreenerPage/types/api'
 
-export const useUpdateStockListQuery = () => {
+interface UseUpdateStockListQueryParams {
+    updateFavoriteStocks?: (stocks: Stock[]) => void
+    favoriteStocks?: Stock[]
+}
+
+export const useUpdateStockListData = ({
+    updateFavoriteStocks,
+    favoriteStocks = [],
+}: UseUpdateStockListQueryParams = {}) => {
     const queryClient = useQueryClient()
 
     useEffect(() => {
@@ -37,6 +46,11 @@ export const useUpdateStockListQuery = () => {
             } else if (region === 'worldstock') {
                 updateOverseasStockListCache(queryClient, itemsByCode)
             }
+
+            // 관심종목 업데이트
+            if (updateFavoriteStocks && favoriteStocks.length > 0) {
+                updateFavoriteStocksWithRealtimeData(favoriteStocks, itemsByCode, updateFavoriteStocks)
+            }
         }
 
         port.addEventListener('message', handleMessage)
@@ -44,7 +58,28 @@ export const useUpdateStockListQuery = () => {
         return () => {
             port.removeEventListener('message', handleMessage)
         }
-    }, [queryClient])
+    }, [queryClient, updateFavoriteStocks, favoriteStocks])
+}
+
+// 관심종목에 실시간 시세 데이터 반영
+function updateFavoriteStocksWithRealtimeData(
+    favoriteStocks: Stock[],
+    realtimeItems: Record<string, RealTimeStockItem>,
+    updateFavoriteStocks: (stocks: Stock[]) => void,
+) {
+    const updatedStocks = favoriteStocks.map((stock) => {
+        const updated = realtimeItems[stock.itemCode]
+        if (!updated) {
+            return stock
+        }
+
+        return {
+            ...stock,
+            ...updated,
+        }
+    })
+
+    updateFavoriteStocks(updatedStocks)
 }
 
 // 국내 주식 리스트 캐시 업데이트
@@ -78,16 +113,7 @@ function updateDomesticStockListCache(
 
                         return {
                             ...stock,
-                            closePrice: updated.closePrice,
-                            compareToPreviousClosePrice: updated.compareToPreviousClosePrice,
-                            fluctuationsRatio: updated.fluctuationsRatio,
-                            compareToPreviousPrice: updated.compareToPreviousPrice,
-                            accumulatedTradingVolume: updated.accumulatedTradingVolume,
-                            accumulatedTradingValue: updated.accumulatedTradingValue,
-                            ...(updated.stockExchangeName && {
-                                stockExchangeName: updated.stockExchangeName,
-                            }),
-                            currencyType: updated.currencyType,
+                            ...updated,
                         }
                     })
 
@@ -141,13 +167,7 @@ function updateOverseasStockListCache(
 
                         return {
                             ...stock,
-                            closePrice: updated.closePrice,
-                            compareToPreviousClosePrice: updated.compareToPreviousClosePrice,
-                            fluctuationsRatio: updated.fluctuationsRatio,
-                            compareToPreviousPrice: updated.compareToPreviousPrice,
-                            accumulatedTradingVolume: updated.accumulatedTradingVolume,
-                            accumulatedTradingValue: updated.accumulatedTradingValue,
-                            currencyType: updated.currencyType,
+                            ...updated,
                         }
                     })
 
