@@ -10,8 +10,10 @@ const TableErrorView = ({
     onRetry,
 }: TableErrorViewProps) => {
     const handleRetry = () => {
+        // resetErrorBoundary가 있으면 우선 실행 (초기 로딩 에러)
         if (resetErrorBoundary) {
             resetErrorBoundary()
+            return
         }
 
         if (onRetry) {
