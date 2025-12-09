@@ -1,15 +1,36 @@
 /* eslint-disable no-console */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
+// @ts-nocheck
+
 import {POLLING_INTERVAL, SHARED_WORKER_MESSAGE_TYPES, type Region} from './constants'
 
-// 연결된 탭의 port 보관
-const ports: MessagePort[] = []
+// 연결된 탭의 port 보관 (WeakRef 사용으로 메모리 누수 방지)
+const ports = new Set<WeakRef<MessagePort>>()
 
 // 구독한 종목 코드 보관
 const stockCodes: Record<Region, Set<string>> = {
     domestic: new Set(),
     worldstock: new Set(),
+}
+
+// 가비지 컬렉션된 포트 정리 함수
+function cleanupDeadPorts() {
+    const deadPorts: WeakRef<MessagePort>[] = []
+
+    ports.forEach((portRef) => {
+        const port = portRef.deref()
+        if (!port) {
+            deadPorts.push(portRef)
+        }
+    })
+
+    deadPorts.forEach((deadPort) => {
+        ports.delete(deadPort)
+    })
+
+    if (deadPorts.length > 0) {
+        console.log(`[SharedWorker] Cleaned up ${deadPorts.length} dead port(s)`)
+    }
 }
 
 async function getRealTimeStockData(region: Region) {
@@ -36,12 +57,22 @@ async function getRealTimeStockData(region: Region) {
 
         const data = await res.json()
 
-        ports.forEach((port) => {
-            port.postMessage({
-                type: SHARED_WORKER_MESSAGE_TYPES.REALTIME_STOCK_DATA_UPDATE,
-                region,
-                payload: data,
-            })
+        // 가비지 컬렉션된 포트 정리
+        cleanupDeadPorts()
+
+        ports.forEach((portRef) => {
+            const port = portRef.deref()
+            if (port) {
+                try {
+                    port.postMessage({
+                        type: SHARED_WORKER_MESSAGE_TYPES.REALTIME_STOCK_DATA_UPDATE,
+                        region,
+                        payload: data,
+                    })
+                } catch (e) {
+                    console.error('[SharedWorker] Failed to post message to port:', e)
+                }
+            }
         })
     } catch (e) {
         console.error('[SharedWorker] fetch error:', region, e)
@@ -56,7 +87,9 @@ setInterval(() => {
 
 onconnect = (event: MessageEvent) => {
     const port = event.ports[0]
-    ports.push(port)
+
+    const portRef = new WeakRef(port)
+    ports.add(portRef)
 
     port.onmessage = (e: MessageEvent) => {
         const msg = e.data
@@ -71,4 +104,6 @@ onconnect = (event: MessageEvent) => {
     }
 
     port.start()
+
+    console.log(`[SharedWorker] New port connected. Total ports: ${ports.size}`)
 }
