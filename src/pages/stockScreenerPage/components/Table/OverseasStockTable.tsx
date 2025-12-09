@@ -12,6 +12,7 @@ import {useInfiniteOverseasStockList} from '@/pages/stockScreenerPage/api/query'
 import {priceChangeFilterAtom, priceChangeRateFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
 import {overseasStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodesAtom'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
+import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
 import {mergeRealTimeStockData} from '@/pages/stockScreenerPage/utils/mergeRealTimeStockData'
@@ -35,6 +36,7 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Ov
 
     const {
         data: stocks,
+        isError,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
@@ -56,9 +58,10 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Ov
         setOverseasStockCodes(codes)
     }, [stocks, setOverseasStockCodes])
 
-    const stocksWithRealTime = mergeRealTimeStockData(stocks, realTimeData)
+    const stocksWithRealTime = mergeRealTimeStockData(stocks ?? [], realTimeData)
 
-    const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage)
+    const isPaginationError = isError && stocks && stocks.length > 0
+    const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
 
     return (
@@ -72,6 +75,15 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Ov
                 onSort={handleSort}
             />
             <div ref={loadMoreRef} className="h-1" />
+
+            {isPaginationError && (
+                <div className="mt-2 px-4">
+                    <TableErrorView
+                        message="추가 데이터를 불러오는 중 오류가 발생했습니다."
+                        onRetry={() => fetchNextPage()}
+                    />
+                </div>
+            )}
 
             {isFetchingNextPage && (
                 <div className="mt-2 flex justify-center items-center py-4 h-20">

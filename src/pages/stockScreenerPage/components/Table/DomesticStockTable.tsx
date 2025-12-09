@@ -14,6 +14,7 @@ import {
 } from '@/pages/stockScreenerPage/atoms/filterAtoms'
 import {domesticStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodesAtom'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
+import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
 import {mergeRealTimeStockData} from '@/pages/stockScreenerPage/utils/mergeRealTimeStockData'
 import {toDomesticApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
@@ -35,6 +36,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Do
 
     const {
         data: stocks,
+        isError,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
@@ -49,17 +51,19 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Do
         },
     )
 
-    // stocks 변경 시 종목 코드만 atom에 업데이트
     const setDomesticStockCodes = useSetAtom(domesticStockCodesAtom)
 
     useEffect(() => {
-        const codes = stocks.map((stock) => stock.itemCode)
-        setDomesticStockCodes(codes)
+        if (stocks) {
+            const codes = stocks.map((stock) => stock.itemCode)
+            setDomesticStockCodes(codes)
+        }
     }, [stocks, setDomesticStockCodes])
 
-    const stocksWithRealTime = mergeRealTimeStockData(stocks, realTimeData)
+    const stocksWithRealTime = mergeRealTimeStockData(stocks ?? [], realTimeData)
 
-    const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage)
+    const isPaginationError = isError && stocks?.length > 0
+    const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
 
     return (
@@ -73,6 +77,15 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Do
                 onSort={handleSort}
             />
             <div ref={loadMoreRef} className="h-1" />
+
+            {!isFetchingNextPage && isPaginationError && (
+                <div className="mt-2 px-4">
+                    <TableErrorView
+                        message="추가 데이터를 불러오는 중 오류가 발생했습니다."
+                        onRetry={() => fetchNextPage()}
+                    />
+                </div>
+            )}
 
             {isFetchingNextPage && (
                 <div className="mt-2 flex justify-center items-center py-4 h-20">
