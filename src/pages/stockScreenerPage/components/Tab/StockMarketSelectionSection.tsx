@@ -18,9 +18,14 @@ const StockMarketSelectionSection = ({searchParams, setSearchParams}: StockMarke
         const newSearchParams = new URLSearchParams(searchParams)
         newSearchParams.set(URL_QUERIES.REGION, region)
 
-        // 해외로 전환할 때 해외 시장이 없으면 기본값 설정
-        if (region === REGIONS.WORLDSTOCK && !newSearchParams.get(URL_QUERIES.WORLDSTOCK_MARKET)) {
-            newSearchParams.set(URL_QUERIES.WORLDSTOCK_MARKET, WORLDSTOCK_MARKETS.NASDAQ)
+        if (region === REGIONS.DOMESTIC) {
+            // 국내로 전환할 때 해외 시장 쿼리 삭제
+            newSearchParams.delete(URL_QUERIES.WORLDSTOCK_MARKET)
+        } else if (region === REGIONS.WORLDSTOCK) {
+            // 해외로 전환할 때 해외 시장이 없으면 기본값 설정
+            if (!newSearchParams.get(URL_QUERIES.WORLDSTOCK_MARKET)) {
+                newSearchParams.set(URL_QUERIES.WORLDSTOCK_MARKET, WORLDSTOCK_MARKETS.NASDAQ)
+            }
         }
 
         setSearchParams(newSearchParams)
