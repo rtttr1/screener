@@ -7,7 +7,7 @@ import {SHARED_WORKER_MESSAGE_TYPES, type RealtimeStockDataUpdateMessage} from '
 
 import type {
     GetDomesticStockListResponse,
-    GetOverseasStockListResponse,
+    GetWorldstockStockListResponse,
     RealTimeStockItem,
     Stock,
 } from '@/pages/stockScreenerPage/types/api'
@@ -45,7 +45,7 @@ export const useUpdateStockListData = ({
             if (region === 'domestic') {
                 updateDomesticStockListCache(queryClient, itemsByCode)
             } else if (region === 'worldstock') {
-                updateOverseasStockListCache(queryClient, itemsByCode)
+                updateWorldstockStockListCache(queryClient, itemsByCode)
             }
 
             // 관심종목 업데이트
@@ -143,27 +143,27 @@ function updateDomesticStockListCache(
 }
 
 // 해외 주식 리스트 캐시 업데이트
-function updateOverseasStockListCache(
+function updateWorldstockStockListCache(
     queryClient: ReturnType<typeof useQueryClient>,
     realtimeItems: Record<string, RealTimeStockItem>,
 ): void {
-    // 해외 주식 리스트 쿼리 키 패턴: ['overseasStockList', 'infinite', params]
+    // 해외 주식 리스트 쿼리 키 패턴: ['worldstockStockList', 'infinite', params]
     const queries = queryClient.getQueryCache().findAll({
         predicate: (query) => {
             const key = query.queryKey
-            return Array.isArray(key) && key[0] === 'overseasStockList' && key[1] === 'infinite'
+            return Array.isArray(key) && key[0] === 'worldstockStockList' && key[1] === 'infinite'
         },
     })
 
     queries.forEach((query) => {
         queryClient.setQueryData(
             query.queryKey,
-            (oldData: {pages: GetOverseasStockListResponse[]; pageParams: unknown[]} | undefined) => {
+            (oldData: {pages: GetWorldstockStockListResponse[]; pageParams: unknown[]} | undefined) => {
                 if (!oldData) {
                     return oldData
                 }
 
-                // 해외: 각 page는 GetOverseasStockListResponse 구조 (stocks에 직접 배열)
+                // 해외: 각 page는 GetWorldstockStockListResponse 구조 (stocks에 직접 배열)
                 const newPages = oldData.pages.map((page) => {
                     const updatedStocks = page.stocks.map((stock) => {
                         // 해외도 Stock 타입으로 변환되어 itemCode를 사용

@@ -30,7 +30,12 @@ const FavoriteStockTable = ({favoriteStocks, onFavoriteToggle}: FavoriteStockMin
                             <FavoriteButtonCell stock={stock} isFavorite onFavoriteToggle={onFavoriteToggle} />
                             <LogoCell itemCode={stock.itemCode} stockName={stock.stockName} size={30} />
                             <SymbolCell itemCode={stock.itemCode} className="w-[60px]" />
-                            <StockNameCell stockName={stock.stockName} className="w-[140px] text-xs" />
+                            <StockNameCell
+                                itemCode={stock.itemCode}
+                                stockName={stock.stockName}
+                                stockType={stock.stockType}
+                                className="w-[140px] text-xs"
+                            />
                             <ChangeHighlightCell
                                 priceChangeStatus={stock.compareToPreviousPrice.name}
                                 currentValue={stock.closePrice}

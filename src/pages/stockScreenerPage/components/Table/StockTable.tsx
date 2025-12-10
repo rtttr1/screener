@@ -61,7 +61,11 @@ const StockTable = ({
                                 />
                                 <LogoCell itemCode={stock.itemCode} stockName={stock.stockName} />
                                 <SymbolCell itemCode={stock.itemCode} />
-                                <StockNameCell stockName={stock.stockName} />
+                                <StockNameCell
+                                    itemCode={stock.itemCode}
+                                    stockName={stock.stockName}
+                                    stockType={stock.stockType}
+                                />
                                 <ChangeHighlightCell
                                     priceChangeStatus={stock.compareToPreviousPrice.name}
                                     currentValue={stock.closePrice}

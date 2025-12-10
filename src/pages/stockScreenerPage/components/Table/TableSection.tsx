@@ -3,10 +3,10 @@ import {Suspense} from 'react'
 import {QueryRetryErrorBoundary} from '@/common/components/QueryRetryErrorBoundary'
 import DomesticStockTable from '@/pages/stockScreenerPage/components/Table/DomesticStockTable'
 import FavoriteStockTable from '@/pages/stockScreenerPage/components/Table/FavoriteStockTable'
-import OverseasStockTable from '@/pages/stockScreenerPage/components/Table/OverseasStockTable'
 import RealtimeStockDataHandler from '@/pages/stockScreenerPage/components/Table/RealtimeStockDataHandler'
 import StockTableSkeleton from '@/pages/stockScreenerPage/components/Table/StockTableSkeleton'
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
+import WorldstockStockTable from '@/pages/stockScreenerPage/components/Table/WorldstockStockTable'
 import {useFavoriteStocks} from '@/pages/stockScreenerPage/hooks/useFavoriteStocks'
 
 interface TableSectionProps {
@@ -30,7 +30,7 @@ const TableSection = ({isDomestic}: TableSectionProps) => {
                     {isDomestic ? (
                         <DomesticStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
                     ) : (
-                        <OverseasStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
+                        <WorldstockStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
                     )}
                 </Suspense>
             </QueryRetryErrorBoundary>
