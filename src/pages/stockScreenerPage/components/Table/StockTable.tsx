@@ -5,6 +5,7 @@ import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
+import ChangeHighlightCell from '@/pages/stockScreenerPage/components/Table/ChangeHighlightCell'
 import EmptyTableView from '@/pages/stockScreenerPage/components/Table/EmptyTableView'
 import SortableTableHead from '@/pages/stockScreenerPage/components/Table/SortableTableHead'
 import {EMPTY_LOGO_URL} from '@/pages/stockScreenerPage/constants/emptyLogo'
@@ -35,7 +36,7 @@ const StockTable = ({
 }: StockTableProps) => {
     return (
         <Table className="w-full">
-            <TableHeader className="sticky top-0 bg-white">
+            <TableHeader className="sticky top-0 bg-white z-10">
                 <TableRow className="outline">
                     <TableHead className="w-[40px]" />
                     <TableHead className="w-[48px]" />
@@ -129,9 +130,13 @@ const StockTable = ({
                                 <TableCell className="font-medium max-w-[300px] truncate" title={stock.stockName}>
                                     {stock.stockName}
                                 </TableCell>
-                                <TableCell className="text-right pr-5">
+                                <ChangeHighlightCell
+                                    priceChangeStatus={stock.compareToPreviousPrice.name}
+                                    currentValue={stock.closePrice}
+                                    className="text-right pr-5"
+                                >
                                     {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
-                                </TableCell>
+                                </ChangeHighlightCell>
                                 <TableCell
                                     className={cn(
                                         'text-right',
@@ -140,7 +145,9 @@ const StockTable = ({
                                 >
                                     {getChangeStatusLabel(stock.compareToPreviousPrice.name)}
                                 </TableCell>
-                                <TableCell
+                                <ChangeHighlightCell
+                                    priceChangeStatus={stock.compareToPreviousPrice.name}
+                                    currentValue={stock.compareToPreviousClosePrice}
                                     className={cn(
                                         'text-right',
                                         getChangeStatusColor(stock.compareToPreviousPrice.name),
@@ -150,10 +157,14 @@ const StockTable = ({
                                         stock.compareToPreviousClosePrice,
                                         stock.currencyType.code,
                                     )}
-                                </TableCell>
-                                <TableCell className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}>
+                                </ChangeHighlightCell>
+                                <ChangeHighlightCell
+                                    priceChangeStatus={stock.compareToPreviousPrice.name}
+                                    currentValue={stock.fluctuationsRatio}
+                                    className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}
+                                >
                                     {stock.fluctuationsRatio}%
-                                </TableCell>
+                                </ChangeHighlightCell>
                                 <TableCell className="text-right">
                                     {getExchangeLabel(stock.stockExchangeName)}
                                 </TableCell>

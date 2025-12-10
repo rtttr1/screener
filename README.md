@@ -4,7 +4,7 @@
 국내 / 해외 / 관심종목 테이블에 대해 필터링, 정렬, 무한 스크롤, 실시간 시세 조회 기능을 구현했습니다.
 
 ## 기술 스택
-- **프론트엔드**
+🍀 **프론트엔드**
   - React 19
   - TypeScript
   - React Router v7
@@ -23,7 +23,6 @@
 📦 **데이터 처리 & 상태 관리**
 - tanstack-query v5
   - 무한 스크롤(Infinite Query): 국내/해외 주식 리스트를 페이지 단위로 받아오고 스크롤 시 자동 로딩
-  - 실시간 시세 폴링: API에서 내려주는 pollingInterval을 기반으로 정확한 주기 제어
   - 쿼리 자동 캐싱: 동일 데이터에 대해 불필요한 네트워크 요청 방지
   - 쿼리 키 기반 상태 관리로 도메인별 데이터를 명확히 분리
 - Jotai
@@ -79,7 +78,7 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 
 ## 사용한 AI 도구와 목적
 - **ChatGPT**
-  - 모르는 부분 질문하고 학습하는 용도로 사용 활용
+  - 모르는 부분 질문하고 학습하는 용도로 활용
 
 - **Cursor Agent**
   - 바이브 코딩 용도로 사용
@@ -90,9 +89,48 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 주식 스크리너를 보는 사용자들은 하나의 창만 두지 않고 다중창으로 동시에 최대한 많은 시세를 확인합니다. 
 이런 다중창 유저를 고려한 UI/UX를 개선할 예정입니다.
 
-1. 정보 업데이트 시 애니메이션 적용으로 어떤 값이 변하는지 한눈에 파악
-2. 다중창에서 실시간 데이터 업데이트 타이밍 통일화
+1. 다중창에서 실시간 데이터 업데이트 타이밍 통일화
+2. 정보 업데이트 시 애니메이션 적용으로 어떤 값이 변하는지 한눈에 파악
 3. 관심종목 테이블 on/off 가능한 UI로 변경
+
+
+
+### 1. Shared Worker를 활용해 다중창에서 실시간 데이터 업데이트 타이밍 통일화
+#### 📍 문제점
+- 초기에는 Tanstack Query를 사용하여 각 창에서 독립적으로 polling을 수행해주었습니다.
+- 이로 인해 다중창 환경에서 실시간 데이터 반영 시간이 달라 다중창 유저의 UX가 저하되었습니다.
+
+<img width="700" height="550" alt="스크린샷 2025-12-10 오전 12 52 50" src="https://github.com/user-attachments/assets/d3ef8c7f-39e0-42da-8369-62b9b125c699" />
+
+#### 📍 개선방향
+- 실시간 시세 polling 로직을 SharedWorker에서 실행하고, 각 창에 데이터를 전달하는 방식으로 구조를 개선해주었습니다.
+- 데이터를 받으면 각 창으로 보내주기 때문에 동일한 타이밍에 데이터가 업데이트 될 수 있게되었습니다.
+
+<img width="700" height="550" alt="스크린샷 2025-12-10 오전 1 50 20" src="https://github.com/user-attachments/assets/ce0452e1-9199-4cbc-8162-f59215f0dfc4" />
+
+#### 📍 트러블 슈팅 : WeakRef를 활용해 메모리 누수 방지
+- 탭 종료 후에도 worker의 Port 관리 객체에서 MessagePort를 강하게 참조하고 있어 GC 대상이 되지 않아 메모리가 누수되는 현상 발생
+
+- WeakRef를 사용하여 SharedWorker에서 MessagePort를 약하게 참조하도록 변경
+<img width="400" height="250" alt="스크린샷 2025-12-10 오전 2 22 06" src="https://github.com/user-attachments/assets/cb997f52-b811-42ad-9296-37cc2f027e60" />
+
+- 탭 종료 시 탭에서의 강한 참조가 끊어지고, Worker쪽에서 약한 참조만 남아 포트가 GC 대상이 되어 제거됨
+- Port가 제거된 후 빈 WeakRef 인스턴스도 제거하는 로직을 추가해 완전하게 메모리 누수를 방지해 성능 악화 예방
+
+- 다중창 10개를 만들었다가 9개를 닫은 후 상황을 비교
+
+WeakRef 사용 전: 메모리에 port가 계속 남아 있음
+<img width="250" height="31" alt="스크린샷 2025-12-10 오전 3 07 08" src="https://github.com/user-attachments/assets/a7e30a60-c382-4d91-8568-98f110917e44" />
+
+WeakRef 사용 후: 일정 시간 후 port가 사라짐
+<img width="254" height="50" alt="스크린샷 2025-12-10 오전 2 37 54" src="https://github.com/user-attachments/assets/17e95f68-ce7f-4c2d-9c79-3e9639d1f729" />
+
+
+#### 📍 개선 결과
+- 여러 창을 열어도 동일한 순간의 시세가 동시에 반영되는 경험 제공
+- 실시간 데이터의 일관성이 확보되어 멀티태스킹 유저들에게 안정적인 UX 제공
+- polling 로직이 중앙화되어 중복 요청 감소 → 리소스 절약
+- 도메인 컴포넌트에서는 복잡한 실시간 merge 로직 없이 React Query만 구독하면 되는 단순한 구조로 개선됨
 
 
 ## 폴더 구조
@@ -119,5 +157,6 @@ fe-externship
 ```
 
 ## 구조 도식화
-<img width="866" height="637" alt="스크린샷 2025-12-08 오후 5 17 53" src="https://github.com/user-attachments/assets/99e57f00-c030-4dea-bcf1-7298dd20dd98" />
+
+<img width="1119" height="881" alt="스크린샷 2025-12-10 오전 4 09 38" src="https://github.com/user-attachments/assets/749a1e00-fd5c-4af4-b12f-dc8b1a5f0a9c" />
 
