@@ -102,11 +102,16 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 
 <img width="700" height="550" alt="스크린샷 2025-12-10 오전 12 52 50" src="https://github.com/user-attachments/assets/d3ef8c7f-39e0-42da-8369-62b9b125c699" />
 
+https://github.com/user-attachments/assets/6a4161ab-c81f-4116-b174-a455cf7eb994
+
 #### 📍 개선방향
-- 실시간 시세 polling 로직을 SharedWorker에서 실행하고, 각 창에 데이터를 전달하는 방식으로 구조를 개선해주었습니다.
-- 데이터를 받으면 각 창으로 보내주기 때문에 동일한 타이밍에 데이터가 업데이트 될 수 있게되었습니다.
+- 실시간 시세 polling 요청을 SharedWorker에서 전담하고, 받아온 데이터를 각 창에 전달하는 방식으로 구조를 개선해주었습니다.
+- 데이터를 받으면 동시에 각 창으로 보내주기 때문에 동일한 타이밍에 데이터가 업데이트 될 수 있게되었습니다.
 
 <img width="700" height="550" alt="스크린샷 2025-12-10 오전 1 50 20" src="https://github.com/user-attachments/assets/ce0452e1-9199-4cbc-8162-f59215f0dfc4" />
+
+https://github.com/user-attachments/assets/9913b3ab-d41c-41f7-b589-1f4e98363b06
+
 
 #### 📍 트러블 슈팅 : WeakRef를 활용해 메모리 누수 방지
 - 탭 종료 후에도 worker의 Port 관리 객체에서 MessagePort를 강하게 참조하고 있어 GC 대상이 되지 않아 메모리가 누수되는 현상 발생
@@ -117,7 +122,7 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 - 탭 종료 시 탭에서의 강한 참조가 끊어지고, Worker쪽에서 약한 참조만 남아 포트가 GC 대상이 되어 제거됨
 - Port가 제거된 후 빈 WeakRef 인스턴스도 제거하는 로직을 추가해 완전하게 메모리 누수를 방지해 성능 악화 예방
 
-- 다중창 10개를 만들었다가 9개를 닫은 후 상황을 비교
+- 다중창 10개를 만들었다가 9개를 닫은 후 상황을 비교해봤습니다. 
 
 WeakRef 사용 전: 메모리에 port가 계속 남아 있음
 <img width="250" height="31" alt="스크린샷 2025-12-10 오전 3 07 08" src="https://github.com/user-attachments/assets/a7e30a60-c382-4d91-8568-98f110917e44" />
@@ -129,9 +134,8 @@ WeakRef 사용 후: 일정 시간 후 port가 사라짐
 #### 📍 개선 결과
 - 여러 창을 열어도 동일한 순간의 시세가 동시에 반영되는 경험 제공
 - 실시간 데이터의 일관성이 확보되어 멀티태스킹 유저들에게 안정적인 UX 제공
-- polling 로직이 중앙화되어 중복 요청 감소 → 리소스 절약
-- 도메인 컴포넌트에서는 복잡한 실시간 merge 로직 없이 React Query만 구독하면 되는 단순한 구조로 개선됨
-
+- polling 로직이 중앙화되어 중복 요청 감소 → 네트워크 리소스 절약
+- 도메인 컴포넌트에서 복잡한 실시간 merge 로직 없이 React Query만 구독하면 되는 단순한 구조로 개선됨
 
 ## 폴더 구조
 ```text
