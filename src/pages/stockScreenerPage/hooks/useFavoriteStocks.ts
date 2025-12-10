@@ -35,7 +35,7 @@ export const useFavoriteStocks = () => {
         saveFavoriteStocksToStorage(favoriteStocks)
     }, [favoriteStocks])
 
-    const toggleFavorite = (target: Stock) => {
+    const handleFavoriteToggle = (target: Stock) => {
         setFavoriteStocks((prev) => {
             const isExist = prev.some((stock) => stock.itemCode === target.itemCode)
 
@@ -60,7 +60,7 @@ export const useFavoriteStocks = () => {
 
     return {
         favoriteStocks,
-        toggleFavorite,
+        handleFavoriteToggle,
         updateFavoriteStocks,
     }
 }
