@@ -4,11 +4,10 @@ import {QueryRetryErrorBoundary} from '@/common/components/QueryRetryErrorBounda
 import DomesticStockTable from '@/pages/stockScreenerPage/components/Table/DomesticStockTable'
 import FavoriteStockTable from '@/pages/stockScreenerPage/components/Table/FavoriteStockTable'
 import OverseasStockTable from '@/pages/stockScreenerPage/components/Table/OverseasStockTable'
+import RealtimeStockDataHandler from '@/pages/stockScreenerPage/components/Table/RealtimeStockDataHandler'
 import StockTableSkeleton from '@/pages/stockScreenerPage/components/Table/StockTableSkeleton'
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {useFavoriteStocks} from '@/pages/stockScreenerPage/hooks/useFavoriteStocks'
-import {useRealTimeStockData} from '@/pages/stockScreenerPage/hooks/useRealTimeStockData'
-import {useUpdateStockListData} from '@/pages/stockScreenerPage/sharedWorker/useUpdateStockListData'
 
 interface TableSectionProps {
     isDomestic: boolean
@@ -17,14 +16,9 @@ interface TableSectionProps {
 const TableSection = ({isDomestic}: TableSectionProps) => {
     const {favoriteStocks, handleFavoriteToggle, updateFavoriteStocks} = useFavoriteStocks()
 
-    useRealTimeStockData()
-    useUpdateStockListData({
-        updateFavoriteStocks,
-        favoriteStocks,
-    })
-
     return (
         <div className="flex gap-4">
+            <RealtimeStockDataHandler favoriteStocks={favoriteStocks} updateFavoriteStocks={updateFavoriteStocks} />
             <QueryRetryErrorBoundary
                 FallbackComponent={({resetErrorBoundary}) => (
                     <div className="w-full rounded-lg border">
