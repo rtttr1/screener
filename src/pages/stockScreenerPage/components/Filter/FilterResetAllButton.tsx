@@ -1,11 +1,17 @@
-import {useSetAtom} from 'jotai'
+import {useAtom, useSetAtom} from 'jotai'
 import {X} from 'lucide-react'
 
 import {Button} from '@/common/components/button'
-import {resetAllFiltersAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
+import {hasActiveFiltersAtom, resetAllFiltersAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
 
 const FilterResetAllButton = () => {
     const handleResetAllFilters = useSetAtom(resetAllFiltersAtom)
+    const [hasActiveFilters] = useAtom(hasActiveFiltersAtom)
+
+    if (!hasActiveFilters) {
+        return null
+    }
+
     return (
         <Button variant="ghost" onClick={handleResetAllFilters} className="text-sm">
             <X className="size-4" />
