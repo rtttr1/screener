@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 
-import {useAtomValue, useSetAtom} from 'jotai'
+import {useAtomValue} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
 
 import type {OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
@@ -10,7 +10,6 @@ import type {SortField} from '@/pages/stockScreenerPage/types/sort'
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
 import {useInfiniteOverseasStockList} from '@/pages/stockScreenerPage/api/query'
 import {priceChangeFilterAtom, priceChangeRateFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import {overseasStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodesAtom'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
@@ -20,9 +19,10 @@ import {toOverseasApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
 interface OverseasStockTableProps {
     favoriteStocks: Stock[]
     onFavoriteToggle: (stock: Stock) => void
+    onStockCodesChange: (codes: string[]) => void
 }
 
-const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTableProps) => {
+const OverseasStockTable = ({favoriteStocks, onFavoriteToggle, onStockCodesChange}: OverseasStockTableProps) => {
     const [searchParams] = useSearchParams()
     const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) as OverseasMarketType
 
@@ -49,12 +49,10 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
         },
     )
 
-    // stocks 변경 시 종목 코드만 atom에 업데이트
-    const setOverseasStockCodes = useSetAtom(overseasStockCodesAtom)
     useEffect(() => {
         const codes = stocks.map((stock) => stock.itemCode)
-        setOverseasStockCodes(codes)
-    }, [stocks, setOverseasStockCodes])
+        onStockCodesChange(codes)
+    }, [stocks, onStockCodesChange])
 
     const isPaginationError = isError && stocks && stocks.length > 0
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)

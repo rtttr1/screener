@@ -8,6 +8,7 @@ import StockTableSkeleton from '@/pages/stockScreenerPage/components/Table/Stock
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {useFavoriteStocks} from '@/pages/stockScreenerPage/hooks/useFavoriteStocks'
 import {useRealTimeStockData} from '@/pages/stockScreenerPage/hooks/useRealTimeStockData'
+import {useStockCodes} from '@/pages/stockScreenerPage/hooks/useStockCodes'
 import {useUpdateStockListData} from '@/pages/stockScreenerPage/sharedWorker/useUpdateStockListData'
 
 interface TableSectionProps {
@@ -17,7 +18,15 @@ interface TableSectionProps {
 const TableSection = ({isDomestic}: TableSectionProps) => {
     const {favoriteStocks, handleFavoriteToggle, updateFavoriteStocks} = useFavoriteStocks()
 
-    useRealTimeStockData()
+    const {domesticStockCodes, overseasStockCodes, handleDomesticStockCodesChange, handleOverseasStockCodesChange} =
+        useStockCodes()
+
+    useRealTimeStockData({
+        domesticItemCodes: domesticStockCodes,
+        overseasItemCodes: overseasStockCodes,
+        favoriteStocks,
+    })
+
     useUpdateStockListData({
         updateFavoriteStocks,
         favoriteStocks,
@@ -34,9 +43,17 @@ const TableSection = ({isDomestic}: TableSectionProps) => {
             >
                 <Suspense fallback={<StockTableSkeleton />}>
                     {isDomestic ? (
-                        <DomesticStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
+                        <DomesticStockTable
+                            favoriteStocks={favoriteStocks}
+                            onFavoriteToggle={handleFavoriteToggle}
+                            onStockCodesChange={handleDomesticStockCodesChange}
+                        />
                     ) : (
-                        <OverseasStockTable favoriteStocks={favoriteStocks} onFavoriteToggle={handleFavoriteToggle} />
+                        <OverseasStockTable
+                            favoriteStocks={favoriteStocks}
+                            onFavoriteToggle={handleFavoriteToggle}
+                            onStockCodesChange={handleOverseasStockCodesChange}
+                        />
                     )}
                 </Suspense>
             </QueryRetryErrorBoundary>

@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 
-import {useAtomValue, useSetAtom} from 'jotai'
+import {useAtomValue} from 'jotai'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField} from '@/pages/stockScreenerPage/types/sort'
@@ -12,7 +12,6 @@ import {
     priceChangeFilterAtom,
     priceChangeRateFilterAtom,
 } from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import {domesticStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodesAtom'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
@@ -21,9 +20,10 @@ import {toDomesticApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
 interface DomesticStockTableProps {
     favoriteStocks: Stock[]
     onFavoriteToggle: (stock: Stock) => void
+    onStockCodesChange: (codes: string[]) => void
 }
 
-const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTableProps) => {
+const DomesticStockTable = ({favoriteStocks, onFavoriteToggle, onStockCodesChange}: DomesticStockTableProps) => {
     const priceChangeFilter = useAtomValue(priceChangeFilterAtom)
     const priceChangeRateFilter = useAtomValue(priceChangeRateFilterAtom)
     const exchangeFilter = useAtomValue(exchangeFilterAtom)
@@ -49,14 +49,12 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
         },
     )
 
-    const setDomesticStockCodes = useSetAtom(domesticStockCodesAtom)
-
     useEffect(() => {
         if (stocks) {
             const codes = stocks.map((stock) => stock.itemCode)
-            setDomesticStockCodes(codes)
+            onStockCodesChange(codes)
         }
-    }, [stocks, setDomesticStockCodes])
+    }, [stocks, onStockCodesChange])
 
     const isPaginationError = isError && stocks?.length > 0
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
