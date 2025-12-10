@@ -5,7 +5,6 @@ import type {RealTimeStockItem, Stock} from '@/pages/stockScreenerPage/types/api
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
 import ChangeHighlightCell from '@/pages/stockScreenerPage/components/Table/ChangeHighlightCell'
-import {PRICE_CHANGE} from '@/pages/stockScreenerPage/constants/priceChange'
 import {mergeRealTimeStockData} from '@/pages/stockScreenerPage/utils/mergeRealTimeStockData'
 import {formatPriceWithCurrency, getChangeRateColor} from '@/pages/stockScreenerPage/utils/stockTable'
 
@@ -79,13 +78,7 @@ const FavoriteStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Fa
                                 {formatPriceWithCurrency(stock.compareToPreviousClosePrice, stock.currencyType.code)}
                             </ChangeHighlightCell>
                             <ChangeHighlightCell
-                                priceChangeStatus={
-                                    parseFloat(stock.fluctuationsRatio) > 0
-                                        ? PRICE_CHANGE.RISING
-                                        : parseFloat(stock.fluctuationsRatio) < 0
-                                          ? PRICE_CHANGE.FALLING
-                                          : PRICE_CHANGE.UNCHANGED
-                                }
+                                priceChangeStatus={stock.compareToPreviousPrice.name}
                                 currentValue={stock.fluctuationsRatio}
                                 className={cn(
                                     'w-[70px] text-right text-xs',
