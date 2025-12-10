@@ -313,5 +313,6 @@ fe-externship
 
 ## 🍀 구조 도식화
 
-<img width="1119" height="881" alt="스크린샷 2025-12-10 오전 4 09 38" src="https://github.com/user-attachments/assets/749a1e00-fd5c-4af4-b12f-dc8b1a5f0a9c" />
+<img width="1045" height="826" alt="스크린샷 2025-12-11 오전 3 48 44" src="https://github.com/user-attachments/assets/d32c01af-a442-4b1c-93cc-72c34664ec70" />
+
 
