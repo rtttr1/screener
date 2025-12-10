@@ -76,7 +76,10 @@ function updateFavoriteStocksWithRealtimeData(
 
         return {
             ...stock,
-            ...updated,
+            closePrice: updated.closePrice,
+            compareToPreviousClosePrice: updated.compareToPreviousClosePrice,
+            fluctuationsRatio: updated.fluctuationsRatio,
+            compareToPreviousPrice: updated.compareToPreviousPrice,
         }
     })
 
@@ -114,7 +117,10 @@ function updateDomesticStockListCache(
 
                         return {
                             ...stock,
-                            ...updated,
+                            closePrice: updated.closePrice,
+                            compareToPreviousClosePrice: updated.compareToPreviousClosePrice,
+                            fluctuationsRatio: updated.fluctuationsRatio,
+                            compareToPreviousPrice: updated.compareToPreviousPrice,
                         }
                     })
 
@@ -168,7 +174,10 @@ function updateOverseasStockListCache(
 
                         return {
                             ...stock,
-                            ...updated,
+                            closePrice: updated.closePrice,
+                            compareToPreviousClosePrice: updated.compareToPreviousClosePrice,
+                            fluctuationsRatio: updated.fluctuationsRatio,
+                            compareToPreviousPrice: updated.compareToPreviousPrice,
                         }
                     })
 
