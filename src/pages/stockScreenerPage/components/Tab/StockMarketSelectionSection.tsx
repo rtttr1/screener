@@ -1,13 +1,15 @@
-import {useSearchParams} from 'react-router-dom'
-
 import OverseasMarketTabList from '@/pages/stockScreenerPage/components/Tab/OverseasMarketTabList'
 import RegionTabList from '@/pages/stockScreenerPage/components/Tab/RegionTabList'
 import {OVERSEAS_MARKETS, type OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
 import {REGIONS, type RegionType} from '@/pages/stockScreenerPage/constants/region'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 
-const StockMarketSelectionSection = () => {
-    const [searchParams, setSearchParams] = useSearchParams()
+interface StockMarketSelectionSectionProps {
+    searchParams: URLSearchParams
+    setSearchParams: (newSearchParams: URLSearchParams) => void
+}
+
+const StockMarketSelectionSection = ({searchParams, setSearchParams}: StockMarketSelectionSectionProps) => {
     const currentRegion = (searchParams.get(URL_QUERIES.REGION) || REGIONS.DOMESTIC) as RegionType
     const currentOverseasMarket = (searchParams.get(URL_QUERIES.OVERSEAS_MARKET) ||
         OVERSEAS_MARKETS.NASDAQ) as OverseasMarketType
