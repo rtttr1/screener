@@ -65,3 +65,13 @@ export const formatPriceWithCurrency = (price: string, currencyCode: string) => 
             return `${price} ${currencyCode}`
     }
 }
+
+export const getChangeBackgroundColor = (status: string): string => {
+    if (status === PRICE_CHANGE.RISING || status === PRICE_CHANGE.UPPER_LIMIT) {
+        return 'bg-red-50'
+    }
+    if (status === PRICE_CHANGE.FALLING || status === PRICE_CHANGE.LOWER_LIMIT) {
+        return 'bg-blue-50'
+    }
+    return ''
+}
