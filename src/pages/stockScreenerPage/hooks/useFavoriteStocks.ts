@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 
@@ -29,13 +29,15 @@ const saveFavoriteStocksToStorage = (stocks: Stock[]): void => {
  * }
  */
 export const useFavoriteStocks = () => {
+    // 추후 관심종목 최대 길이가 늘어날 경우, Map을 사용하여 중복 체크 최적화 가능
+    // 현재는 최대 길이가 20개이므로 편하게 배열로 관리
     const [favoriteStocks, setFavoriteStocks] = useState<Stock[]>(() => loadFavoriteStocksFromStorage())
 
     useEffect(() => {
         saveFavoriteStocksToStorage(favoriteStocks)
     }, [favoriteStocks])
 
-    const toggleFavorite = (target: Stock) => {
+    const handleFavoriteToggle = useCallback((target: Stock) => {
         setFavoriteStocks((prev) => {
             const isExist = prev.some((stock) => stock.itemCode === target.itemCode)
 
@@ -52,15 +54,15 @@ export const useFavoriteStocks = () => {
 
             return [...prev, target]
         })
-    }
+    }, [])
 
-    const updateFavoriteStocks = (stocks: Stock[]) => {
+    const updateFavoriteStocks = useCallback((stocks: Stock[]) => {
         setFavoriteStocks(stocks)
-    }
+    }, [])
 
     return {
         favoriteStocks,
-        toggleFavorite,
+        handleFavoriteToggle,
         updateFavoriteStocks,
     }
 }
