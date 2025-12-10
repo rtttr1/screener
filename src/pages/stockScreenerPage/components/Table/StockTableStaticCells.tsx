@@ -46,17 +46,24 @@ FavoriteButtonCell.displayName = 'FavoriteButtonCell'
 interface LogoCellProps {
     itemCode: string
     stockName: string
+    size?: number
 }
 
-export const LogoCell = memo(({itemCode, stockName}: LogoCellProps) => {
+export const LogoCell = memo(({itemCode, stockName, size = 24}: LogoCellProps) => {
     return (
         <TableCell>
             <img
                 src={`https://ssl.pstatic.net/imgstock/fn/stage/logo/stock/Stock${itemCode}.svg`}
                 alt={`${stockName} 로고`}
-                width={24}
-                height={24}
-                className="min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px] rounded-full object-contain"
+                width={size}
+                height={size}
+                style={{
+                    minWidth: `${size}px`,
+                    minHeight: `${size}px`,
+                    maxWidth: `${size}px`,
+                    maxHeight: `${size}px`,
+                }}
+                className="rounded-full object-contain"
                 onError={(event) => {
                     event.currentTarget.onerror = null
                     event.currentTarget.src = EMPTY_LOGO_URL
@@ -70,21 +77,23 @@ LogoCell.displayName = 'LogoCell'
 
 interface SymbolCellProps {
     itemCode: string
+    className?: string
 }
 
-export const SymbolCell = memo(({itemCode}: SymbolCellProps) => {
-    return <TableCell className="text-xs text-gray-500">{itemCode}</TableCell>
+export const SymbolCell = memo(({itemCode, className}: SymbolCellProps) => {
+    return <TableCell className={cn('text-xs text-gray-500', className)}>{itemCode}</TableCell>
 })
 
 SymbolCell.displayName = 'SymbolCell'
 
 interface StockNameCellProps {
     stockName: string
+    className?: string
 }
 
-export const StockNameCell = memo(({stockName}: StockNameCellProps) => {
+export const StockNameCell = memo(({stockName, className}: StockNameCellProps) => {
     return (
-        <TableCell className="font-medium max-w-[300px] truncate" title={stockName}>
+        <TableCell className={cn('font-medium max-w-[300px] truncate', className)} title={stockName}>
             {stockName}
         </TableCell>
     )
