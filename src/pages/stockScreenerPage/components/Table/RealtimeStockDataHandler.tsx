@@ -1,6 +1,6 @@
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 
-import {useRealTimeStockData} from '@/pages/stockScreenerPage/hooks/useRealTimeStockData'
+import {useSendRealTimeStockCodes} from '@/pages/stockScreenerPage/hooks/useRealTimeStockData'
 import {useUpdateStockListData} from '@/pages/stockScreenerPage/sharedWorker/useUpdateStockListData'
 
 interface RealtimeStockDataHandlerProps {
@@ -9,7 +9,7 @@ interface RealtimeStockDataHandlerProps {
 }
 
 const RealtimeStockDataHandler = ({favoriteStocks, updateFavoriteStocks}: RealtimeStockDataHandlerProps) => {
-    useRealTimeStockData()
+    useSendRealTimeStockCodes()
     useUpdateStockListData({
         updateFavoriteStocks,
         favoriteStocks,
