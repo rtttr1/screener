@@ -10,7 +10,7 @@
  * }
  */
 
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
 
 import type {SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
@@ -27,7 +27,7 @@ export const useTableSort = <T>(initialField: T | null = null) => {
         order: initialField ? SORT_ORDERS.DESC : SORT_ORDERS.NONE,
     })
 
-    const handleSort = (field: T) => {
+    const handleSort = useCallback((field: T) => {
         setSortState((prev) => {
             // 등락률 필드의 경우: 기본 -> desc -> asc -> 기본
             if (field === SORT_FIELDS.FLUCTUATIONS_RATIO) {
@@ -54,9 +54,9 @@ export const useTableSort = <T>(initialField: T | null = null) => {
             // 다른 필드를 클릭하거나 기본 상태에서 클릭하면 활성화
             return {field, order: SORT_ORDERS.DESC}
         })
-    }
+    }, [])
 
-    const resetSort = () => setSortState({field: null, order: SORT_ORDERS.NONE})
+    const resetSort = useCallback(() => setSortState({field: null, order: SORT_ORDERS.NONE}), [])
 
     return {
         sortState,
