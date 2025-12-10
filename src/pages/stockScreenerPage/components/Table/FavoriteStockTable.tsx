@@ -4,6 +4,7 @@ import type {RealTimeStockItem, Stock} from '@/pages/stockScreenerPage/types/api
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/common/components/table'
 import {cn} from '@/common/utils/cn'
+import ChangeHighlightCell from '@/pages/stockScreenerPage/components/Table/ChangeHighlightCell'
 import {mergeRealTimeStockData} from '@/pages/stockScreenerPage/utils/mergeRealTimeStockData'
 import {formatPriceWithCurrency, getChangeRateColor} from '@/pages/stockScreenerPage/utils/stockTable'
 
@@ -62,20 +63,30 @@ const FavoriteStockTable = ({favoriteStocks, onFavoriteToggle, realTimeData}: Fa
                             </TableCell>
                             <TableCell className="w-[60px] text-xs text-gray-500">{stock.itemCode}</TableCell>
                             <TableCell className="w-[140px] truncate text-xs font-medium">{stock.stockName}</TableCell>
-                            <TableCell className="w-[80px] text-right text-xs">
+                            <ChangeHighlightCell
+                                priceChangeStatus={stock.compareToPreviousPrice.name}
+                                currentValue={stock.closePrice}
+                                className="w-[80px] text-right text-xs"
+                            >
                                 {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
-                            </TableCell>
-                            <TableCell className="w-[80px] text-right text-xs">
+                            </ChangeHighlightCell>
+                            <ChangeHighlightCell
+                                priceChangeStatus={stock.compareToPreviousPrice.name}
+                                currentValue={stock.compareToPreviousClosePrice}
+                                className="w-[80px] text-right text-xs"
+                            >
                                 {formatPriceWithCurrency(stock.compareToPreviousClosePrice, stock.currencyType.code)}
-                            </TableCell>
-                            <TableCell
+                            </ChangeHighlightCell>
+                            <ChangeHighlightCell
+                                priceChangeStatus={stock.compareToPreviousPrice.name}
+                                currentValue={stock.fluctuationsRatio}
                                 className={cn(
                                     'w-[70px] text-right text-xs',
                                     getChangeRateColor(stock.fluctuationsRatio),
                                 )}
                             >
                                 {stock.fluctuationsRatio}%
-                            </TableCell>
+                            </ChangeHighlightCell>
                         </TableRow>
                     ))}
                 </TableBody>
