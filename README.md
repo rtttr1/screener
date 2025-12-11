@@ -3,7 +3,7 @@
 네이버페이 FE Externship 과제로 구현한 주식 스크리너 프로젝트입니다.  
 국내 / 해외 / 관심종목 테이블에 대해 필터링, 정렬, 무한 스크롤, 실시간 시세 조회 기능을 구현했습니다.
 
-## 🍀 기술 스택
+## 기술 스택
 🍀 **프론트엔드**
   - React 19
   - TypeScript
@@ -44,7 +44,7 @@
 
 <br/>
 
-## 🍀 개발 모드 실행 및 프로덕션 빌드 / 시작 스크립트
+## 개발 모드 실행 및 프로덕션 빌드 / 시작 스크립트
 
 ### 1. 의존성 설치
 ```bash
@@ -79,34 +79,71 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 
 <br/>
 
-## 🍀 사용한 AI 도구와 목적
-- **ChatGPT**
+## 사용한 AI 도구와 목적
+- 📍 **ChatGPT**
   - 모르는 부분 질문하고 학습하는 용도로 활용
 
-- **Cursor Agent**
+- 📍 **Cursor Agent**
   - 바이브 코딩 용도로 사용
   - 반복적인 리팩터링, 보일러플레이트 코드 작성, 타이핑이 많은 작업을 도와주는 보조 도구로 활용
 
 <br/>
 
-## 🍀 추가로 구현한 과제와 자세한 내용
-### UI/UX 개선
+## 기능 구현
+
+### ✅ 국내 / 해외 탭
+- **상태 관리**: `URLSearchParams`로 URL query 파라미터에 `region`, `worldstock_market` 저장
+- **구현 방식**: `useSearchParams`로 현재 탭 상태 읽기, 탭 클릭 시 `setSearchParams`로 URL 업데이트
+
+### ✅ 필터
+- **상태 관리**: Jotai atom (`priceChangeFilterAtom`, `priceChangeRateFilterAtom`, `exchangeFilterAtom`)
+- **구현 방식**: 필터 변경 시 atom 업데이트 → React Query의 `select` 옵션에서 필터링된 데이터 반환
+
+### ✅ 국내 / 해외 테이블 (무한 스크롤)
+- **상태 관리**: React Query Infinite Query로 페이지별 데이터 캐싱
+- **구현 방식**: `useSuspenseInfiniteQuery` + `useIntersectionObserver`로 스크롤 감지 시 `fetchNextPage` 호출
+
+### ✅ 관심종목
+- **상태 관리**: `useState` + `localStorage` (최대 20개)
+- **구현 방식**: `useFavoriteStocks` 커스텀 훅에서 로컬스토리지와 동기화, `storage` 이벤트로 다중창 동기화
+
+### ✅ 실시간 시세 조회
+- **상태 관리**: SharedWorker에서 전역으로 종목 코드 구독 관리 (`stockCodes: Record<Region, Set<string>>`)
+- **구현 방식**: 
+  - SharedWorker에서 `setTimeout` 기반 재귀적 폴링
+  - API 응답의 `pollingInterval` 값으로 동적 폴링 주기 설정
+  - 국내/해외 region별 독립적인 타이머 관리
+  - 실시간 데이터 수신 시 React Query 캐시 업데이트 (`queryClient.setQueryData`)
+
+### ✅ 전반적인 에러 핸들링
+- **초기 로딩 에러**: `QueryRetryErrorBoundary`로 감싸서 에러 발생 시 재시도 UI 제공
+- **페이지네이션 에러**: 테이블 하단에 에러 메시지와 재시도 버튼 표시
+- **라우터 외부 에러**: `GlobalErrorBoundary`로 전역 에러 핸들링
+- **라우터 내부 에러**: `errorElement`로 라우터 내부 전역 에러 핸들링
+- **404 에러**: `NotFoundPage` 컴포넌트로 처리
+
+<br/>
+
+## 추가 구현 과제
+### 🔥 1. UI/UX 개선 - 다중창 환경 최적화
 주식 스크리너를 보는 사용자들은 하나의 창만 두지 않고 다중창으로 동시에 최대한 많은 시세를 확인합니다. 이런 다중창 유저를 고려해 Shared worker를 활용해 실시간 시세 업데이트 타이밍을 동기화시켜주었습니다.
 
 📍 개선 효과
-- 여러 창을 열어도 동일한 순간에 시세가 동시에 반영되는 경험 제공
-- polling 로직이 중앙화되어 다중창 환경에서 중복 요청 감소 → **네트워크 리소스 절약해 성능개선**
+- 여러 창을 열어도 동일한 순간에 실시간 시세가 반영되어 사용자에게 동기화된 경험 제공
+- polling 로직이 중앙화되어 다중창 환경에서 중복 요청 감소 → **서버 부하 감소와 네트워크 리소스 절약**
 
-### 성능 최적화
+### 🔥 2. 성능 최적화
 실시간 시세 데이터를 반영하는 서비스이기에 랜더링 성능이 좋아야 긍정적인 UX를 제공할 수 있다 생각했습니다. 이에 React devtools profiler를 기반으로 구조개선과 메모이제이션을 진행해 랜더링 성능 최적화를 진행했습니다.
 
 📍 개선 효과
 - 20개의 주식 데이터 기준 **75.7ms → 30.5ms로 렌더링 시간 약 60% 단축** 
 - 3000개의 주식 데이터 기준 **621.3ms → 256ms 로 랜더링 시간 약 0.4초 단축**
+- 빠른 랜더링으로 사용자가 대규모 데이터를 확인해도 실시간 시세를 지연 없이 확인할 수 있어, 긍정적인 UX를 제공
 
 <br/>
 
-### 1. Shared Worker를 활용해 다중창에서 실시간 데이터 업데이트 타이밍 통일화 [https://github.com/NaverPayDev/2025-externship-fe-rtttr1/pull/47]
+## 자세한 내용
+### 🔥 1. Shared Worker를 활용해 다중창에서 실시간 데이터 업데이트 타이밍 통일화 [https://github.com/NaverPayDev/2025-externship-fe-rtttr1/pull/47]
 #### 📍 문제점
 - 초기에는 Tanstack Query를 사용하여 각 창에서 독립적으로 polling을 수행해주었습니다.
 - 이로 인해 다중창 환경에서 실시간 데이터 반영 시간이 달라 다중창 유저의 UX가 저하되었습니다.
@@ -159,7 +196,7 @@ WeakRef 사용 후: 일정 시간 후 port가 제거됨
 <br/>
 
 ---
-### 2. React Devtools profiler 기반 랜더링 성능 최적화
+### 🔥 2. React Devtools profiler 기반 랜더링 성능 최적화
 
 ### 🍀 구조 개선 - shared worker와 실시간 데이터 로직 주고받는 훅 분리
 
