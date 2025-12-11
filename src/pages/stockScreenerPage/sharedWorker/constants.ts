@@ -34,4 +34,4 @@ export type SharedWorkerMessage =
     | RealtimeStockDataUpdateMessage
 
 // 폴링 간격 상수
-export const POLLING_INTERVAL = 7000
+export const DEFAULT_POLLING_INTERVAL = 7000
