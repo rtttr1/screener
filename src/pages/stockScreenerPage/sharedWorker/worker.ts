@@ -27,10 +27,6 @@ function cleanupDeadPorts() {
     deadPorts.forEach((deadPort) => {
         ports.delete(deadPort)
     })
-
-    if (deadPorts.length > 0) {
-        console.log(`[SharedWorker] Cleaned up ${deadPorts.length} dead port(s)`)
-    }
 }
 
 async function getRealTimeStockData(region: Region) {
@@ -51,7 +47,6 @@ async function getRealTimeStockData(region: Region) {
         })
 
         if (!res.ok) {
-            console.error('[SharedWorker] fetch failed:', region, res.status, res.statusText)
             return
         }
 
@@ -104,6 +99,4 @@ onconnect = (event: MessageEvent) => {
     }
 
     port.start()
-
-    console.log(`[SharedWorker] New port connected. Total ports: ${ports.size}`)
 }
