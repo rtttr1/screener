@@ -3,34 +3,34 @@ import {useEffect} from 'react'
 import {useAtomValue, useSetAtom} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
 
-import type {OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
+import type {WorldstockMarketType} from '@/pages/stockScreenerPage/constants/worldstockMarket'
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField} from '@/pages/stockScreenerPage/types/sort'
 
 import useIntersectionObserver from '@/common/hooks/useIntersectionObserver'
-import {useInfiniteOverseasStockList} from '@/pages/stockScreenerPage/api/query'
+import {useInfiniteWorldstockStockList} from '@/pages/stockScreenerPage/api/query'
 import {priceChangeFilterAtom, priceChangeRateFilterAtom} from '@/pages/stockScreenerPage/atoms/filterAtoms'
-import {overseasStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodesAtom'
+import {worldstockStockCodesAtom} from '@/pages/stockScreenerPage/atoms/stockCodesAtom'
 import StockTable from '@/pages/stockScreenerPage/components/Table/StockTable'
 import TableErrorView from '@/pages/stockScreenerPage/components/Table/TableErrorView'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
 import {useTableSort} from '@/pages/stockScreenerPage/hooks/useTableSort'
-import {toOverseasApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
+import {toWorldstockApiSortType} from '@/pages/stockScreenerPage/utils/sortMapper'
 
-interface OverseasStockTableProps {
+interface WorldstockStockTableProps {
     favoriteStocks: Stock[]
     onFavoriteToggle: (stock: Stock) => void
 }
 
-const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTableProps) => {
+const WorldstockStockTable = ({favoriteStocks, onFavoriteToggle}: WorldstockStockTableProps) => {
     const [searchParams] = useSearchParams()
-    const currentOverseasMarket = searchParams.get(URL_QUERIES.OVERSEAS_MARKET) as OverseasMarketType
+    const currentWorldstockMarket = searchParams.get(URL_QUERIES.WORLDSTOCK_MARKET) as WorldstockMarketType
 
     const priceChangeFilter = useAtomValue(priceChangeFilterAtom)
     const priceChangeRateFilter = useAtomValue(priceChangeRateFilterAtom)
 
     const {sortState, handleSort} = useTableSort<SortField>()
-    const sortType = toOverseasApiSortType(sortState)
+    const sortType = toWorldstockApiSortType(sortState)
 
     const {
         data: stocks,
@@ -38,9 +38,9 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useInfiniteOverseasStockList(
+    } = useInfiniteWorldstockStockList(
         {
-            stockExchangeType: currentOverseasMarket,
+            stockExchangeType: currentWorldstockMarket,
             sortType,
         },
         {
@@ -50,18 +50,21 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
     )
 
     // stocks 변경 시 종목 코드만 atom에 업데이트
-    const setOverseasStockCodes = useSetAtom(overseasStockCodesAtom)
+    const setWorldstockStockCodes = useSetAtom(worldstockStockCodesAtom)
     useEffect(() => {
         const codes = stocks.map((stock) => stock.itemCode)
-        setOverseasStockCodes(codes)
-    }, [stocks, setOverseasStockCodes])
+        setWorldstockStockCodes(codes)
+    }, [stocks, setWorldstockStockCodes])
 
     const isPaginationError = isError && stocks && stocks.length > 0
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
 
     return (
-        <div className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]">
+        <section
+            aria-label="해외 주식 테이블"
+            className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]"
+        >
             <StockTable
                 stocks={stocks}
                 favoriteStocks={favoriteStocks}
@@ -86,8 +89,8 @@ const OverseasStockTable = ({favoriteStocks, onFavoriteToggle}: OverseasStockTab
                     <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
                 </div>
             )}
-        </div>
+        </section>
     )
 }
 
-export default OverseasStockTable
+export default WorldstockStockTable

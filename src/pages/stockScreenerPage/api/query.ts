@@ -3,11 +3,11 @@ import {useSuspenseInfiniteQuery} from '@tanstack/react-query'
 import type {
     GetDomesticStockListRequest,
     GetDomesticStockListResponse,
-    GetOverseasStockListRequest,
-    GetOverseasStockListResponse,
+    GetWorldstockStockListRequest,
+    GetWorldstockStockListResponse,
 } from '@/pages/stockScreenerPage/types/api'
 
-import {getDomesticStockList, getOverseasStockList} from '@/pages/stockScreenerPage/api/api'
+import {getDomesticStockList, getWorldstockStockList} from '@/pages/stockScreenerPage/api/api'
 import {filterStocks, type StockFilters} from '@/pages/stockScreenerPage/utils/stockFilters'
 
 const DEFAULT_PAGE_SIZE = 20
@@ -17,8 +17,8 @@ interface InfiniteDomesticData {
     pageParams: unknown[]
 }
 
-interface InfiniteOverseasData {
-    pages: GetOverseasStockListResponse[]
+interface InfiniteWorldstockData {
+    pages: GetWorldstockStockListResponse[]
     pageParams: unknown[]
 }
 
@@ -59,18 +59,18 @@ function applyFiltersToInfiniteDomesticData(pages: InfiniteDomesticData['pages']
     }))
 }
 
-export const useInfiniteOverseasStockList = (params: GetOverseasStockListRequest, filters?: StockFilters) => {
+export const useInfiniteWorldstockStockList = (params: GetWorldstockStockListRequest, filters?: StockFilters) => {
     return useSuspenseInfiniteQuery({
-        queryKey: ['overseasStockList', 'infinite', params],
+        queryKey: ['worldstockStockList', 'infinite', params],
         initialPageParam: 1,
         queryFn: ({pageParam}) =>
-            getOverseasStockList({
+            getWorldstockStockList({
                 ...params,
                 page: pageParam,
                 pageSize: params.pageSize ?? DEFAULT_PAGE_SIZE,
             }),
         select: (data) => {
-            const filteredPages = applyFiltersToInfiniteOverseasData(data.pages, filters)
+            const filteredPages = applyFiltersToInfiniteWorldstockData(data.pages, filters)
             return filteredPages.flatMap((page) => page.stocks)
         },
         getNextPageParam: (lastPage) => {
@@ -86,7 +86,7 @@ export const useInfiniteOverseasStockList = (params: GetOverseasStockListRequest
     })
 }
 
-function applyFiltersToInfiniteOverseasData(pages: InfiniteOverseasData['pages'], filters?: StockFilters) {
+function applyFiltersToInfiniteWorldstockData(pages: InfiniteWorldstockData['pages'], filters?: StockFilters) {
     if (!filters) {
         return pages
     }

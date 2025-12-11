@@ -1,5 +1,5 @@
 export interface Stock {
-    stockType: 'domestic' | 'overseas'
+    stockType: 'domestic' | 'worldstock'
     stockEndType: string
     itemCode: string
     stockName: string
@@ -57,7 +57,7 @@ export interface GetDomesticStockListResponse {
 }
 
 // 해외 주식 거래소 타입
-export type OverseasStockExchangeType =
+export type WorldstockStockExchangeType =
     | 'NASDAQ'
     | 'NYSE'
     | 'AMEX'
@@ -69,10 +69,10 @@ export type OverseasStockExchangeType =
     | 'HANOI'
 
 // 해외 주식 정렬 타입
-export type OverseasSortType = 'marketValue' | 'up' | 'down' | 'top' | 'priceTop'
+export type WorldstockSortType = 'marketValue' | 'up' | 'down' | 'top' | 'priceTop'
 
 // 해외 주식 응답 타입
-export interface OverseasStock {
+export interface WorldstockStock {
     stockType: 'worldstock'
     stockEndType: string
     reutersCode: string
@@ -92,7 +92,7 @@ export interface OverseasStock {
         name: string
     }
     stockExchangeType: {
-        name: OverseasStockExchangeType
+        name: WorldstockStockExchangeType
     }
     nationType: string
     dividend: string
@@ -100,16 +100,16 @@ export interface OverseasStock {
 }
 
 // 해외 주식 리스트 요청 타입
-export interface GetOverseasStockListRequest {
-    stockExchangeType: OverseasStockExchangeType
-    sortType: OverseasSortType
+export interface GetWorldstockStockListRequest {
+    stockExchangeType: WorldstockStockExchangeType
+    sortType: WorldstockSortType
     page?: number
     pageSize?: number
 }
 
 // 해외 주식 리스트 원본 API 응답 타입
-export interface OverseasStockListApiResponse {
-    stocks: OverseasStock[]
+export interface WorldstockStockListApiResponse {
+    stocks: WorldstockStock[]
     page: number
     pageSize: number
     totalCount: number
@@ -117,7 +117,7 @@ export interface OverseasStockListApiResponse {
 }
 
 // 해외 주식 리스트 응답 타입 (변환된 Stock[] 반환)
-export interface GetOverseasStockListResponse {
+export interface GetWorldstockStockListResponse {
     stocks: Stock[]
     page: number
     pageSize: number

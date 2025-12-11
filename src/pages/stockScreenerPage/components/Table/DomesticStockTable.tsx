@@ -63,7 +63,10 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
 
     return (
-        <div className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]">
+        <section
+            aria-label="국내 주식 테이블"
+            className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]"
+        >
             <StockTable
                 stocks={stocks}
                 favoriteStocks={favoriteStocks}
@@ -88,7 +91,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
                     <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-transparent" />
                 </div>
             )}
-        </div>
+        </section>
     )
 }
 

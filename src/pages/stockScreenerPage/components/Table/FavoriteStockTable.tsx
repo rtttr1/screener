@@ -1,3 +1,5 @@
+import {useId} from 'react'
+
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 
 import {Table, TableBody, TableRow} from '@/common/components/table'
@@ -18,9 +20,13 @@ interface FavoriteStockMiniTableProps {
 }
 
 const FavoriteStockTable = ({favoriteStocks, onFavoriteToggle}: FavoriteStockMiniTableProps) => {
+    const titleId = useId()
+
     return (
-        <section aria-label="관심종목 테이블" className="sticky top-4 h-fit w-[500px] rounded-lg border bg-white">
-            <h2 className="border-b rounded-t-lg bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-700">관심종목</h2>
+        <section aria-labelledby={titleId} className="sticky top-4 h-fit w-[500px] rounded-lg border bg-white">
+            <h2 id={titleId} className="border-b rounded-t-lg bg-gray-50 px-3 py-2 text-xs font-semibold text-gray-700">
+                관심종목
+            </h2>
 
             <Table className="table-fixed">
                 <FavoriteStockTableHeader />
@@ -30,7 +36,12 @@ const FavoriteStockTable = ({favoriteStocks, onFavoriteToggle}: FavoriteStockMin
                             <FavoriteButtonCell stock={stock} isFavorite onFavoriteToggle={onFavoriteToggle} />
                             <LogoCell itemCode={stock.itemCode} stockName={stock.stockName} size={30} />
                             <SymbolCell itemCode={stock.itemCode} className="w-[60px]" />
-                            <StockNameCell stockName={stock.stockName} className="w-[140px] text-xs" />
+                            <StockNameCell
+                                itemCode={stock.itemCode}
+                                stockName={stock.stockName}
+                                stockType={stock.stockType}
+                                className="w-[140px] text-xs"
+                            />
                             <ChangeHighlightCell
                                 priceChangeStatus={stock.compareToPreviousPrice.name}
                                 currentValue={stock.closePrice}

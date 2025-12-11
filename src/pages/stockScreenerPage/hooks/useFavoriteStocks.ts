@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 
@@ -32,10 +32,39 @@ export const useFavoriteStocks = () => {
     // 추후 관심종목 최대 길이가 늘어날 경우, Map을 사용하여 중복 체크 최적화 가능
     // 현재는 최대 길이가 20개이므로 편하게 배열로 관리
     const [favoriteStocks, setFavoriteStocks] = useState<Stock[]>(() => loadFavoriteStocksFromStorage())
+    const isSyncingFromStorage = useRef(false)
 
     useEffect(() => {
+        // storage 이벤트로 인한 업데이트는 저장하지 않음 (무한 루프 방지)
+        if (isSyncingFromStorage.current) {
+            isSyncingFromStorage.current = false
+            return
+        }
         saveFavoriteStocksToStorage(favoriteStocks)
     }, [favoriteStocks])
+
+    // 다른 창에서 로컬스토리지 변경 감지
+    useEffect(() => {
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key !== FAVORITE_STOCKS_STORAGE_KEY || event.newValue === null) {
+                return
+            }
+
+            try {
+                const newStocks = JSON.parse(event.newValue) as Stock[]
+                isSyncingFromStorage.current = true
+                setFavoriteStocks(newStocks)
+            } catch {
+                // 로컬스토리지 파싱 실패 시 무시
+            }
+        }
+
+        window.addEventListener('storage', handleStorageChange)
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange)
+        }
+    }, [])
 
     const handleFavoriteToggle = useCallback((target: Stock) => {
         setFavoriteStocks((prev) => {

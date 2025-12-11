@@ -41,7 +41,7 @@ export const FavoriteButtonCell = memo(({stock, isFavorite, onFavoriteToggle}: F
     )
 })
 
-FavoriteButtonCell.displayName = 'FavoriteButtonCell'
+FavoriteButtonCell.displayName = 'MemoizedFavoriteButtonCell'
 
 interface LogoCellProps {
     itemCode: string
@@ -87,14 +87,23 @@ export const SymbolCell = memo(({itemCode, className}: SymbolCellProps) => {
 SymbolCell.displayName = 'SymbolCell'
 
 interface StockNameCellProps {
+    itemCode: string
     stockName: string
+    stockType: 'domestic' | 'worldstock'
     className?: string
 }
 
-export const StockNameCell = memo(({stockName, className}: StockNameCellProps) => {
+export const StockNameCell = memo(({itemCode, stockName, stockType, className}: StockNameCellProps) => {
     return (
         <TableCell className={cn('font-medium max-w-[300px] truncate', className)} title={stockName}>
-            {stockName}
+            <a
+                href={`https://m.stock.naver.com/${stockType}/stock/${itemCode}/total`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-left hover:underline cursor-pointer w-full"
+            >
+                {stockName}
+            </a>
         </TableCell>
     )
 })

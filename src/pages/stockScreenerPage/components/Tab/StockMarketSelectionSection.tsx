@@ -1,8 +1,8 @@
-import OverseasMarketTabList from '@/pages/stockScreenerPage/components/Tab/OverseasMarketTabList'
 import RegionTabList from '@/pages/stockScreenerPage/components/Tab/RegionTabList'
-import {OVERSEAS_MARKETS, type OverseasMarketType} from '@/pages/stockScreenerPage/constants/overseasMarket'
+import WorldstockMarketTabList from '@/pages/stockScreenerPage/components/Tab/WorldstockMarketTabList'
 import {REGIONS, type RegionType} from '@/pages/stockScreenerPage/constants/region'
 import {URL_QUERIES} from '@/pages/stockScreenerPage/constants/urlQueries'
+import {WORLDSTOCK_MARKETS, type WorldstockMarketType} from '@/pages/stockScreenerPage/constants/worldstockMarket'
 
 interface StockMarketSelectionSectionProps {
     searchParams: URLSearchParams
@@ -11,34 +11,39 @@ interface StockMarketSelectionSectionProps {
 
 const StockMarketSelectionSection = ({searchParams, setSearchParams}: StockMarketSelectionSectionProps) => {
     const currentRegion = (searchParams.get(URL_QUERIES.REGION) || REGIONS.DOMESTIC) as RegionType
-    const currentOverseasMarket = (searchParams.get(URL_QUERIES.OVERSEAS_MARKET) ||
-        OVERSEAS_MARKETS.NASDAQ) as OverseasMarketType
+    const currentWorldstockMarket = (searchParams.get(URL_QUERIES.WORLDSTOCK_MARKET) ||
+        WORLDSTOCK_MARKETS.NASDAQ) as WorldstockMarketType
 
     const handleRegionTabClick = (region: RegionType) => {
         const newSearchParams = new URLSearchParams(searchParams)
         newSearchParams.set(URL_QUERIES.REGION, region)
 
-        // 해외로 전환할 때 해외 시장이 없으면 기본값 설정
-        if (region === REGIONS.OVERSEAS && !newSearchParams.get(URL_QUERIES.OVERSEAS_MARKET)) {
-            newSearchParams.set(URL_QUERIES.OVERSEAS_MARKET, OVERSEAS_MARKETS.NASDAQ)
+        if (region === REGIONS.DOMESTIC) {
+            // 국내로 전환할 때 해외 시장 쿼리 삭제
+            newSearchParams.delete(URL_QUERIES.WORLDSTOCK_MARKET)
+        } else if (region === REGIONS.WORLDSTOCK) {
+            // 해외로 전환할 때 해외 시장이 없으면 기본값 설정
+            if (!newSearchParams.get(URL_QUERIES.WORLDSTOCK_MARKET)) {
+                newSearchParams.set(URL_QUERIES.WORLDSTOCK_MARKET, WORLDSTOCK_MARKETS.NASDAQ)
+            }
         }
 
         setSearchParams(newSearchParams)
     }
 
-    const handleOverseasMarketTabClick = (market: OverseasMarketType) => {
+    const handleWorldstockMarketTabClick = (market: WorldstockMarketType) => {
         const newSearchParams = new URLSearchParams(searchParams)
-        newSearchParams.set(URL_QUERIES.OVERSEAS_MARKET, market)
+        newSearchParams.set(URL_QUERIES.WORLDSTOCK_MARKET, market)
         setSearchParams(newSearchParams)
     }
 
     return (
         <section aria-label="국내/해외 주식시장 선택" className="flex items-center gap-4 p-4">
             <RegionTabList currentRegion={currentRegion} onRegionTabClick={handleRegionTabClick} />
-            {currentRegion === REGIONS.OVERSEAS && (
-                <OverseasMarketTabList
-                    currentOverseasMarket={currentOverseasMarket}
-                    onOverseasMarketTabClick={handleOverseasMarketTabClick}
+            {currentRegion === REGIONS.WORLDSTOCK && (
+                <WorldstockMarketTabList
+                    currentWorldstockMarket={currentWorldstockMarket}
+                    onWorldstockMarketTabClick={handleWorldstockMarketTabClick}
                 />
             )}
         </section>

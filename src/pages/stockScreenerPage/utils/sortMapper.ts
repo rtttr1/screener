@@ -1,4 +1,4 @@
-import type {SortType, OverseasSortType} from '@/pages/stockScreenerPage/types/api'
+import type {SortType, WorldstockSortType} from '@/pages/stockScreenerPage/types/api'
 import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
 import {SORT_FIELDS, SORT_ORDERS} from '@/pages/stockScreenerPage/constants/sort'
@@ -28,9 +28,9 @@ export const toDomesticApiSortType = (sortState: SortState): SortType => {
 /**
  * 해외 주식 API용 정렬 타입으로 변환
  * @param sortState 정렬 상태
- * @returns API OverseasSortType
+ * @returns API WorldstockSortType
  */
-export const toOverseasApiSortType = (sortState: SortState): OverseasSortType => {
+export const toWorldstockApiSortType = (sortState: SortState): WorldstockSortType => {
     if (!sortState.field) {
         return SORT_FIELDS.MARKET_VALUE
     }
@@ -45,5 +45,5 @@ export const toOverseasApiSortType = (sortState: SortState): OverseasSortType =>
         return 'top'
     }
 
-    return sortState.field as OverseasSortType
+    return sortState.field as WorldstockSortType
 }
