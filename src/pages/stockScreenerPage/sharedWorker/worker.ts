@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import {POLLING_INTERVAL, SHARED_WORKER_MESSAGE_TYPES, type Region} from './constants'
+import {DEFAULT_POLLING_INTERVAL, SHARED_WORKER_MESSAGE_TYPES, type Region} from './constants'
 
 // 연결된 탭의 port 보관 (WeakRef 사용으로 메모리 누수 방지)
 const ports = new Set<WeakRef<MessagePort>>()
@@ -27,17 +27,16 @@ function cleanupDeadPorts() {
     deadPorts.forEach((deadPort) => {
         ports.delete(deadPort)
     })
-
-    if (deadPorts.length > 0) {
-        console.log(`[SharedWorker] Cleaned up ${deadPorts.length} dead port(s)`)
-    }
 }
 
-async function getRealTimeStockData(region: Region) {
+async function getRealTimeStockData(region: Region): Promise<number | null> {
     const codes = Array.from(stockCodes[region])
     if (codes.length === 0) {
-        return
+        return null
     }
+
+    // 가비지 컬렉션된 포트 정리
+    cleanupDeadPorts()
 
     try {
         const res = await fetch(`/m-stock/realTime/stock?type=${region}`, {
@@ -51,14 +50,10 @@ async function getRealTimeStockData(region: Region) {
         })
 
         if (!res.ok) {
-            console.error('[SharedWorker] fetch failed:', region, res.status, res.statusText)
-            return
+            return null
         }
 
         const data = await res.json()
-
-        // 가비지 컬렉션된 포트 정리
-        cleanupDeadPorts()
 
         ports.forEach((portRef) => {
             const port = portRef.deref()
@@ -74,22 +69,44 @@ async function getRealTimeStockData(region: Region) {
                 }
             }
         })
-    } catch (e) {
-        console.error('[SharedWorker] fetch error:', region, e)
+
+        return data?.result?.pollingInterval ?? null
+    } catch {
+        return null
     }
 }
 
-// 실시간 데이터 폴링
-setInterval(() => {
-    getRealTimeStockData('domestic')
-    getRealTimeStockData('worldstock')
-}, POLLING_INTERVAL)
+// setTimeout 기반 polling
+const pollingTimers: Record<Region, ReturnType<typeof setTimeout> | null> = {
+    domestic: null,
+    worldstock: null,
+}
+
+function startPolling(region: Region, initialInterval) {
+    // 기존 타이머가 있으면 정리
+    if (pollingTimers[region]) {
+        clearTimeout(pollingTimers[region])
+    }
+
+    pollingTimers[region] = setTimeout(async () => {
+        const pollingInterval = await getRealTimeStockData(region)
+
+        // 다음 polling 예약
+        startPolling(region, pollingInterval || initialInterval)
+    }, initialInterval)
+}
 
 onconnect = (event: MessageEvent) => {
     const port = event.ports[0]
 
     const portRef = new WeakRef(port)
     ports.add(portRef)
+
+    // 첫 연결 시 각 region별로 폴링 시작
+    if (ports.size === 1) {
+        startPolling('domestic', DEFAULT_POLLING_INTERVAL)
+        startPolling('worldstock', DEFAULT_POLLING_INTERVAL)
+    }
 
     port.onmessage = (e: MessageEvent) => {
         const msg = e.data
@@ -104,6 +121,4 @@ onconnect = (event: MessageEvent) => {
     }
 
     port.start()
-
-    console.log(`[SharedWorker] New port connected. Total ports: ${ports.size}`)
 }
