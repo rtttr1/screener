@@ -22,7 +22,7 @@ const StockMarketSelectionSection = ({searchParams, setSearchParams}: StockMarke
             // 국내로 전환할 때 해외 시장 쿼리 삭제
             newSearchParams.delete(URL_QUERIES.WORLDSTOCK_MARKET)
         } else if (region === REGIONS.WORLDSTOCK) {
-            // 해외로 전환할 때 해외 시장이 없으면 기본값 설정
+        // 해외로 전환할 때 해외 시장이 없으면 기본값 설정
             if (!newSearchParams.get(URL_QUERIES.WORLDSTOCK_MARKET)) {
                 newSearchParams.set(URL_QUERIES.WORLDSTOCK_MARKET, WORLDSTOCK_MARKETS.NASDAQ)
             }

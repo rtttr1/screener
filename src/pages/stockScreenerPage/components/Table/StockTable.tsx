@@ -1,3 +1,5 @@
+import {memo} from 'react'
+
 import type {Stock} from '@/pages/stockScreenerPage/types/api'
 import type {SortField, SortOrder} from '@/pages/stockScreenerPage/types/sort'
 
@@ -92,7 +94,7 @@ const StockTable = ({
                                     currentValue={stock.fluctuationsRatio}
                                     className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}
                                 >
-                                    {stock.fluctuationsRatio}%
+                                    {`${stock.fluctuationsRatio}%`}
                                 </ChangeHighlightCell>
                                 <ExchangeCell stockExchangeName={stock.stockExchangeName} />
                                 <TradingVolumeCell accumulatedTradingVolume={stock.accumulatedTradingVolume} />
@@ -109,4 +111,4 @@ const StockTable = ({
     )
 }
 
-export default StockTable
+export default memo(StockTable)

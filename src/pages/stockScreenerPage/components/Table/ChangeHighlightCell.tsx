@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef, useState, memo} from 'react'
 
 import type {ReactNode} from 'react'
 
@@ -64,4 +64,4 @@ const ChangeHighlightCell = ({priceChangeStatus, currentValue, className, childr
     )
 }
 
-export default ChangeHighlightCell
+export default memo(ChangeHighlightCell)

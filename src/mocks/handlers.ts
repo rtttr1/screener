@@ -54,11 +54,11 @@ export const handlers: HttpHandler[] = [
         const url = new URL(request.url)
         const page = Number(url.searchParams.get('page') || '1')
         errorCount++
-        // 초기 요청 또는 3번째 페이지(page=3)에서 에러 발생
-        if (errorCount < 4 || page === 3) {
+        // 초기 요청에서만 에러 발생
+        if (errorCount < 4) {
             return HttpResponse.json({message: '서버 오류가 발생했습니다.'}, {status: 500})
         }
-        // 정상 응답 (page=2, page>=4)
+        // 정상 응답
         const pageSize = Number(url.searchParams.get('pageSize') || '20')
         const mockStocks = Array.from({length: pageSize}, (_, i) => ({
             stockType: 'domestic' as const,
