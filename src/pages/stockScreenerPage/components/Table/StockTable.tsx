@@ -24,6 +24,53 @@ import {
     getChangeStatusColor,
 } from '@/pages/stockScreenerPage/utils/stockTable'
 
+interface StockTableRowProps {
+    stock: Stock
+    isFavorite: boolean
+    onFavoriteToggle: (stock: Stock) => void
+}
+
+const StockTableRow = memo(({stock, isFavorite, onFavoriteToggle}: StockTableRowProps) => {
+    return (
+        <TableRow>
+            <FavoriteButtonCell stock={stock} isFavorite={isFavorite} onFavoriteToggle={onFavoriteToggle} />
+            <LogoCell itemCode={stock.itemCode} stockName={stock.stockName} />
+            <SymbolCell itemCode={stock.itemCode} />
+            <StockNameCell itemCode={stock.itemCode} stockName={stock.stockName} stockType={stock.stockType} />
+            <ChangeHighlightCell
+                priceChangeStatus={stock.compareToPreviousPrice.name}
+                currentValue={stock.closePrice}
+                className="text-right pr-5"
+            >
+                {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
+            </ChangeHighlightCell>
+            <ChangeStatusCell changeStatus={stock.compareToPreviousPrice.name} />
+            <ChangeHighlightCell
+                priceChangeStatus={stock.compareToPreviousPrice.name}
+                currentValue={stock.compareToPreviousClosePrice}
+                className={cn('text-right', getChangeStatusColor(stock.compareToPreviousPrice.name))}
+            >
+                {formatPriceWithCurrency(stock.compareToPreviousClosePrice, stock.currencyType.code)}
+            </ChangeHighlightCell>
+            <ChangeHighlightCell
+                priceChangeStatus={stock.compareToPreviousPrice.name}
+                currentValue={stock.fluctuationsRatio}
+                className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}
+            >
+                {`${stock.fluctuationsRatio}%`}
+            </ChangeHighlightCell>
+            <ExchangeCell stockExchangeName={stock.stockExchangeName} />
+            <TradingVolumeCell accumulatedTradingVolume={stock.accumulatedTradingVolume} />
+            <TradingValueCell
+                accumulatedTradingValue={stock.accumulatedTradingValue}
+                currencyCode={stock.currencyType.code}
+            />
+        </TableRow>
+    )
+})
+
+StockTableRow.displayName = 'StockTableRow'
+
 interface StockTableProps {
     stocks: Stock[]
     favoriteStocks: Stock[]
@@ -55,54 +102,12 @@ const StockTable = ({
                         )
 
                         return (
-                            <TableRow key={stock.itemCode}>
-                                <FavoriteButtonCell
-                                    stock={stock}
-                                    isFavorite={isFavorite}
-                                    onFavoriteToggle={onFavoriteToggle}
-                                />
-                                <LogoCell itemCode={stock.itemCode} stockName={stock.stockName} />
-                                <SymbolCell itemCode={stock.itemCode} />
-                                <StockNameCell
-                                    itemCode={stock.itemCode}
-                                    stockName={stock.stockName}
-                                    stockType={stock.stockType}
-                                />
-                                <ChangeHighlightCell
-                                    priceChangeStatus={stock.compareToPreviousPrice.name}
-                                    currentValue={stock.closePrice}
-                                    className="text-right pr-5"
-                                >
-                                    {formatPriceWithCurrency(stock.closePrice, stock.currencyType.code)}
-                                </ChangeHighlightCell>
-                                <ChangeStatusCell changeStatus={stock.compareToPreviousPrice.name} />
-                                <ChangeHighlightCell
-                                    priceChangeStatus={stock.compareToPreviousPrice.name}
-                                    currentValue={stock.compareToPreviousClosePrice}
-                                    className={cn(
-                                        'text-right',
-                                        getChangeStatusColor(stock.compareToPreviousPrice.name),
-                                    )}
-                                >
-                                    {formatPriceWithCurrency(
-                                        stock.compareToPreviousClosePrice,
-                                        stock.currencyType.code,
-                                    )}
-                                </ChangeHighlightCell>
-                                <ChangeHighlightCell
-                                    priceChangeStatus={stock.compareToPreviousPrice.name}
-                                    currentValue={stock.fluctuationsRatio}
-                                    className={cn('text-right', getChangeRateColor(stock.fluctuationsRatio))}
-                                >
-                                    {`${stock.fluctuationsRatio}%`}
-                                </ChangeHighlightCell>
-                                <ExchangeCell stockExchangeName={stock.stockExchangeName} />
-                                <TradingVolumeCell accumulatedTradingVolume={stock.accumulatedTradingVolume} />
-                                <TradingValueCell
-                                    accumulatedTradingValue={stock.accumulatedTradingValue}
-                                    currencyCode={stock.currencyType.code}
-                                />
-                            </TableRow>
+                            <StockTableRow
+                                key={stock.itemCode}
+                                stock={stock}
+                                isFavorite={isFavorite}
+                                onFavoriteToggle={onFavoriteToggle}
+                            />
                         )
                     })
                 )}
