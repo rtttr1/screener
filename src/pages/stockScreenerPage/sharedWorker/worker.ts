@@ -1,6 +1,4 @@
 /* eslint-disable no-console */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 
 import {DEFAULT_POLLING_INTERVAL, SHARED_WORKER_MESSAGE_TYPES, type Region} from './constants'
 
@@ -15,17 +13,11 @@ const stockCodes: Record<Region, Set<string>> = {
 
 // 가비지 컬렉션된 포트 정리 함수
 function cleanupDeadPorts() {
-    const deadPorts: WeakRef<MessagePort>[] = []
-
     ports.forEach((portRef) => {
         const port = portRef.deref()
         if (!port) {
-            deadPorts.push(portRef)
+            ports.delete(portRef) // GC된 포트 자동 정리
         }
-    })
-
-    deadPorts.forEach((deadPort) => {
-        ports.delete(deadPort)
     })
 }
 
@@ -82,7 +74,7 @@ const pollingTimers: Record<Region, ReturnType<typeof setTimeout> | null> = {
     worldstock: null,
 }
 
-function startPolling(region: Region, initialInterval) {
+function startPolling(region: Region, initialInterval: number) {
     // 기존 타이머가 있으면 정리
     if (pollingTimers[region]) {
         clearTimeout(pollingTimers[region])
@@ -96,7 +88,7 @@ function startPolling(region: Region, initialInterval) {
     }, initialInterval)
 }
 
-onconnect = (event: MessageEvent) => {
+;(self as unknown as {onconnect: (event: MessageEvent) => void}).onconnect = (event: MessageEvent) => {
     const port = event.ports[0]
 
     const portRef = new WeakRef(port)
