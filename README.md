@@ -176,16 +176,6 @@ https://github.com/user-attachments/assets/9913b3ab-d41c-41f7-b589-1f4e98363b06
 - 탭 종료 시 탭에서의 강한 참조가 끊어지고, Worker쪽에서 약한 참조만 남아 포트가 GC 대상이 되어 제거됨
 - Port가 제거된 후 빈 WeakRef 인스턴스도 제거하는 로직을 추가해 완전하게 메모리 누수를 방지해 성능 악화 예방
 
-- 다중창 10개를 만들었다가 9개를 닫은 후 활성화된 port 개수를 추적해보았습니다.
-
-WeakRef 사용 전: 메모리에 port가 계속 남아 있음
-
-![WeakRef 사용 전](https://github.com/user-attachments/assets/a7e30a60-c382-4d91-8568-98f110917e44)
-
-WeakRef 사용 후: 일정 시간 후 port가 제거됨
-
-![WeakRef 사용 후](https://github.com/user-attachments/assets/17e95f68-ce7f-4c2d-9c79-3e9639d1f729)
-
 <br/>
 
 #### 📍 개선 결과
@@ -260,7 +250,7 @@ const StockScreenerPage = () => {
 1. 실시간 데이터 반영시 긴 랜더링 한번만 발생
 2. 실시간 데이터 반영시 필터, 탭영역 리랜더링 방지
 
-<img width="742" height="471" alt="스크린샷 2025-12-11 오전 2 55 59" src="https://github.com/user-attachments/assets/18908194-d336-46ce-9e01-05ed0500fc39" />
+<img width="735" height="482" alt="스크린샷 2026-01-04 오후 9 51 19" src="https://github.com/user-attachments/assets/f261f833-c56c-4248-9073-9c02671713d6" />
 
 ---
 
@@ -283,7 +273,7 @@ const StockScreenerPage = () => {
 
 - 실시간 시세 반영시 테이블 헤더, 테이블 고정 영역 리랜더링 방지
 
-<img width="728" height="203" alt="스크린샷 2025-12-11 오전 2 57 45" src="https://github.com/user-attachments/assets/4922f96b-eceb-4be9-b0a0-7350df47dd3d" />
+<img width="717" height="202" alt="스크린샷 2026-01-04 오후 9 51 32" src="https://github.com/user-attachments/assets/60a2ba07-30f7-42cc-9b17-e8fc3d43d07a" />
 
 📍**트러블 슈팅**
 
@@ -306,16 +296,12 @@ const StockScreenerPage = () => {
 
 📍 **20개의 데이터 불러왔을때 랜더링 성능 비교**
 
-<img width="726" height="206" alt="스크린샷 2025-12-11 오전 2 58 47" src="https://github.com/user-attachments/assets/7cf66178-a98f-4676-a2cb-45bc7ca88d3d" />
-
 - 개선 전 render : 41.4ms + 34.3ms = **75.7ms**
 - 개선 후 render : **30.5ms**
 
 ### ❗ **75.7ms → 30.5ms로 렌더링 시간 약 60% 단축**
 
 📍 **약 3000개의 데이터 불러왔을때 랜더링 성능 비교**
-
-<img width="720" height="179" alt="스크린샷 2025-12-11 오전 2 59 12" src="https://github.com/user-attachments/assets/769bcafc-17d4-4501-9969-3dabc194d7e7" />
 
 - 개선 전 render : 388.6ms + 232.7ms = **621.3ms**
 - 개선 후 render : **256ms** 
@@ -346,10 +332,5 @@ fe-externship
 │        ├─ types/             # API/도메인 타입 정의
 │        └─ utils/             # 매핑, 정렬, 테이블 유틸
 ```
-<br/>
-
-## 🍀 구조 도식화
-
-<img width="1045" height="826" alt="스크린샷 2025-12-11 오전 3 48 44" src="https://github.com/user-attachments/assets/d32c01af-a442-4b1c-93cc-72c34664ec70" />
 
 
