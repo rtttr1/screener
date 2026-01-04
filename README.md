@@ -143,12 +143,11 @@ npm run svgr         # public/svg → React SVG 컴포넌트 변환
 <br/>
 
 ## 자세한 내용
-### 🔥 1. Shared Worker를 활용해 다중창에서 실시간 데이터 업데이트 타이밍 통일화 [https://github.com/NaverPayDev/2025-externship-fe-rtttr1/pull/47]
+### 🔥 1. Shared Worker를 활용해 다중창에서 실시간 데이터 업데이트 타이밍 통일화 
 #### 📍 문제점
 - 초기에는 Tanstack Query를 사용하여 각 창에서 독립적으로 polling을 수행해주었습니다.
 - 이로 인해 다중창 환경에서 실시간 데이터 반영 시간이 달라 다중창 유저의 UX가 저하되었습니다.
 
-<img width="700" height="550" alt="스크린샷 2025-12-10 오전 12 52 50" src="https://github.com/user-attachments/assets/d3ef8c7f-39e0-42da-8369-62b9b125c699" />
 
 https://github.com/user-attachments/assets/6a4161ab-c81f-4116-b174-a455cf7eb994
 
@@ -158,7 +157,6 @@ https://github.com/user-attachments/assets/6a4161ab-c81f-4116-b174-a455cf7eb994
 - 실시간 시세 polling 요청을 SharedWorker에서 전담하고, 받아온 데이터를 각 창에 전달하는 방식으로 구조를 개선해주었습니다.
 - SharedWorker가 데이터를 받으면, 관리하고 있는 탭들에게 동시에 데이터를 보내 동일한 타이밍에 정보가 반영되었습니다.
 
-<img width="700" height="550" alt="스크린샷 2025-12-10 오전 1 50 20" src="https://github.com/user-attachments/assets/ce0452e1-9199-4cbc-8162-f59215f0dfc4" />
 
 https://github.com/user-attachments/assets/9913b3ab-d41c-41f7-b589-1f4e98363b06
 
@@ -170,7 +168,8 @@ https://github.com/user-attachments/assets/9913b3ab-d41c-41f7-b589-1f4e98363b06
 
 **개선 과정**
 - WeakRef를 사용하여 SharedWorker에서 MessagePort를 약하게 참조하도록 변경
-<img width="400" height="250" alt="스크린샷 2025-12-10 오전 2 22 06" src="https://github.com/user-attachments/assets/cb997f52-b811-42ad-9296-37cc2f027e60" />
+
+<img width="543" height="365" alt="스크린샷 2026-01-04 오후 9 53 25" src="https://github.com/user-attachments/assets/3e41a1d7-9a90-46b4-ab02-2f7341200e89" />
 
 **개선 결과**
 - 탭 종료 시 탭에서의 강한 참조가 끊어지고, Worker쪽에서 약한 참조만 남아 포트가 GC 대상이 되어 제거됨
