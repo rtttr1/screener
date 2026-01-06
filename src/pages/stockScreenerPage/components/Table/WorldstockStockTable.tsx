@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {useAtomValue, useSetAtom} from 'jotai'
 import {useSearchParams} from 'react-router-dom'
@@ -59,9 +59,11 @@ const WorldstockStockTable = ({favoriteStocks, onFavoriteToggle}: WorldstockStoc
     const isPaginationError = isError && stocks && stocks.length > 0
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
+    const scrollElementRef = useRef<HTMLElement>(null)
 
     return (
         <section
+            ref={scrollElementRef}
             aria-label="해외 주식 테이블"
             className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]"
         >
@@ -72,6 +74,7 @@ const WorldstockStockTable = ({favoriteStocks, onFavoriteToggle}: WorldstockStoc
                 currentSortField={sortState.field}
                 currentSortOrder={sortState.order}
                 onSort={handleSort}
+                scrollElementRef={scrollElementRef}
             />
             <div ref={loadMoreRef} className="h-1" />
 

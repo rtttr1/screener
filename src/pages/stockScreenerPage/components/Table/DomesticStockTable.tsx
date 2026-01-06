@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {useAtomValue, useSetAtom} from 'jotai'
 
@@ -61,9 +61,11 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
     const isPaginationError = isError && stocks?.length > 0
     const canFetchNext = Boolean(hasNextPage && !isFetchingNextPage && !isPaginationError)
     const loadMoreRef = useIntersectionObserver(fetchNextPage, canFetchNext)
+    const scrollElementRef = useRef<HTMLElement>(null)
 
     return (
         <section
+            ref={scrollElementRef}
             aria-label="국내 주식 테이블"
             className="w-full rounded-lg border overflow-auto max-h-[calc(100vh-200px)]"
         >
@@ -74,6 +76,7 @@ const DomesticStockTable = ({favoriteStocks, onFavoriteToggle}: DomesticStockTab
                 currentSortField={sortState.field}
                 currentSortOrder={sortState.order}
                 onSort={handleSort}
+                scrollElementRef={scrollElementRef}
             />
             <div ref={loadMoreRef} className="h-1" />
 
